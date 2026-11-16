@@ -1,0 +1,981 @@
+{
+ "_comment": "How the monitor starts the harness's own runner scripts. This file is the only place where the monitor knows their command lines; the scripts are never imported. {episode_dir} {relay_dir} {session_dir} {plan} {calibration} {pair_fixture} {instruction} {resume_held} {condition} are filled in by monitor/fhmon/sessions.py. Paths (script, fixed_instruction_file, input globs) are relative to the repository root. Each fixed task's goal is the prompt file its runner reads at start; the Live page can edit it.",
+ "tasks": [
+  {
+   "id": "blackboard_wipe",
+   "short": "Wipe",
+   "name": "Wipe the whiteboard",
+   "summary": "Use the eraser to wipe the writing off the board; the position of the eraser, the content of the writing and the way of wiping are for the agent to judge from the current images.",
+   "script": "scripts/real/blackboard_wipe.py",
+   "max_actions": 40,
+   "guards": [
+    {
+     "label": "collision guard (12 N while holding)",
+     "value": 8,
+     "status": "warning"
+    },
+    {
+     "label": "session force cap",
+     "value": 25,
+     "status": "critical"
+    }
+   ],
+   "torque_cap": 3,
+   "conditions": [
+    {
+     "id": "A",
+     "label": "Force harness",
+     "harness_condition": "phys2_force",
+     "arm": "harness",
+     "args": [
+      "--condition",
+      "A"
+     ],
+     "note": "Identifies the board, the writing and the eraser on its own; all primitives and L2 force feedback are available, including contact, push and slide."
+    },
+    {
+     "id": "B",
+     "label": "Baseline (no force)",
+     "harness_condition": "none_guard",
+     "arm": "baseline",
+     "args": [
+      "--condition",
+      "B"
+     ],
+     "note": "Same task and cameras, actions decided on its own; uses position primitives, no force readings, guards still active."
+    }
+   ],
+   "output_args": [
+    "--out",
+    "{episode_dir}",
+    "--relay-dir",
+    "{relay_dir}"
+   ],
+   "demo": {
+    "args": [],
+    "scripted": true,
+    "relay_args": [
+     "--demo-model"
+    ],
+    "note": "Checks only the fixed task, the relay and the records: the demo has no physics model of the board, the writing or the eraser, so it cannot verify wiping."
+   },
+   "live": {
+    "args": [
+     "--live",
+     "--execute",
+     "--auto-confirm",
+     "--calibration",
+     "{calibration}"
+    ],
+    "inputs": {
+     "calibration": {
+      "label": "Force calibration",
+      "glob": [
+       "configs/real/force_calibration.json",
+       "configs/real/*calibration*.json"
+      ],
+      "default": "configs/real/force_calibration.json",
+      "required": true
+     }
+    },
+    "checklist": [
+     "I am next to the robot with the emergency stop in hand.",
+     "The board to wipe and the eraser are in place, the board is stable, the workspace is visible, and nothing nearby gets in the way of the motion.",
+     "The robot PC services (arm controller and gripper) are running and the force calibration is available; the gripper starts empty (when resuming from the last episode, state below what it is holding), and the agent identifies and picks up the eraser on its own."
+    ],
+    "note": "The goal is fixed; the position of the eraser, the content of the writing, how to pick up the eraser, the contact pose and the wiping path are decided by the agent from the observations of this episode. Existing primitives and safety guards apply.",
+    "resume_held": {
+     "label": "Resume from the last episode / start holding an object: the gripper is closed on the object named below",
+     "args": [
+      "--resume-held={resume_held}"
+     ],
+     "default": "eraser",
+     "placeholder": "What it is holding, for example: eraser",
+     "note": "Tick this only when the gripper really is holding something: left in the hand when the last episode stopped, or closed on it before the start. The runner starts as \"holding this\" (the gripper no longer has to open first), tares once while still in the air, and tells the model in the first turn that the object is already in the hand. Do not tick this if the hand is empty and the gripper just cannot open to 78 mm: clear the area around the fingers and restart the gripper service, which homes the gripper and measures the opening again. This option has no effect when the gripper is actually open."
+    }
+   },
+   "graceful_done": {
+    "name": "done",
+    "args": {
+     "success": false,
+     "note": "[monitor] The operator ended this episode from the Monitor"
+    }
+   },
+   "score": {
+    "args": [
+     "score",
+     "--out",
+     "{episode_dir}",
+     "--outcome",
+     "{outcome}"
+    ],
+    "field": "outcome",
+    "options": [
+     {
+      "value": "success",
+      "label": "Writing wiped clean",
+      "success": true
+     },
+     {
+      "value": "partial",
+      "label": "Partly wiped, some writing remains",
+      "success": false
+     },
+     {
+      "value": "failed",
+      "label": "Not wiped clean, or cannot be confirmed",
+      "success": false
+     },
+     {
+      "value": "not_attempted",
+      "label": "Did not start wiping",
+      "success": false
+     }
+    ]
+   },
+   "model_images": true,
+   "fixed_instruction_file": "forceharness/prompts/real/blackboard_wipe.md"
+  },
+  {
+   "id": "screw_insert",
+   "short": "Screw",
+   "name": "Screw the green screw into the purple hole",
+   "summary": "First judge whether the green screw is in the hand, then line up its shaft with the threaded hole at the center of the purple gear (the hole is smaller) and turn the wrist to screw it fully in; when the wrist cannot turn further, release, turn back and grasp again.",
+   "script": "scripts/real/screw_insert.py",
+   "max_actions": 60,
+   "guards": [
+    {
+     "label": "collision guard (12 N while holding)",
+     "value": 8,
+     "status": "warning"
+    },
+    {
+     "label": "session force cap",
+     "value": 25,
+     "status": "critical"
+    }
+   ],
+   "torque_cap": 3,
+   "conditions": [
+    {
+     "id": "A",
+     "label": "Force harness",
+     "harness_condition": "phys2_force",
+     "arm": "harness",
+     "args": [
+      "--condition",
+      "A"
+     ],
+     "note": "Judges on its own whether the screw is in the hand, finds the hole and screws it in; all primitives and L2 force feedback are available (search, insert, push, etc.), and tool results show the contact force while finding the hole and the pull of the thread on the hand while screwing."
+    },
+    {
+     "id": "B",
+     "label": "Baseline (no force)",
+     "harness_condition": "none_guard",
+     "arm": "baseline",
+     "args": [
+      "--condition",
+      "B"
+     ],
+     "note": "Same task and cameras; position primitives (including rotate_z to screw and grasp/release to regrasp), no force readings, guards still active."
+    }
+   ],
+   "output_args": [
+    "--out",
+    "{episode_dir}",
+    "--relay-dir",
+    "{relay_dir}"
+   ],
+   "demo": {
+    "args": [
+     "--max-actions",
+     "60",
+     "--max-minutes",
+     "60"
+    ],
+    "scripted": true,
+    "relay_args": [
+     "--demo-model"
+    ],
+    "note": "Checks only the fixed task, the relay and the records: the demo has no physics model of the screw, the threaded hole or tightening, so it cannot verify screwing in."
+   },
+   "live": {
+    "args": [
+     "--live",
+     "--execute",
+     "--auto-confirm",
+     "--calibration",
+     "{calibration}",
+     "--max-actions",
+     "60",
+     "--max-minutes",
+     "60"
+    ],
+    "inputs": {
+     "calibration": {
+      "label": "Force calibration",
+      "glob": [
+       "configs/real/force_calibration.json",
+       "configs/real/*calibration*.json"
+      ],
+      "default": "configs/real/force_calibration.json",
+      "required": true
+     }
+    },
+    "checklist": [
+     "I am next to the robot with the emergency stop in hand.",
+     "The green screw is in its original hole in the wooden board or already in the hand (if in the hand, tick \"Resume from the last episode / start holding an object\" below); the purple gear is in place and fixed so it will not turn with the screw; the wooden fixture is stable and the target is visible.",
+     "The robot PC services (arm controller and gripper) are running, the gripper width reads normally (about 80 mm fully open), and the force calibration is available."
+    ],
+    "note": "The goal is fixed: screw the green screw fully into the threaded hole at the center of the purple gear. Whether the screw starts in the hand or in its original hole is for the agent to judge from the photos and the gripper width. Existing primitives and safety guards apply; screwing uses rotate_z (≤ 90° each time; condition A also has screw); wrist joint 7 is limited to −0.8 to 2.4 rad, so at the end of its range it releases, turns back and grasps again, with no limit on the number of grasps.",
+    "resume_held": {
+     "label": "Resume from the last episode / start holding an object: the gripper is closed on the object named below",
+     "args": [
+      "--resume-held={resume_held}"
+     ],
+     "default": "green screw",
+     "placeholder": "What it is holding, for example: eraser",
+     "note": "Tick this only when the gripper really is holding something: left in the hand when the last episode stopped, or closed on it before the start. The runner starts as \"holding this\" (the gripper no longer has to open first), tares once while still in the air, and tells the model in the first turn that the object is already in the hand. Do not tick this if the hand is empty and the gripper just cannot open to 78 mm: clear the area around the fingers and restart the gripper service, which homes the gripper and measures the opening again. This option has no effect when the gripper is actually open."
+    }
+   },
+   "graceful_done": {
+    "name": "done",
+    "args": {
+     "success": false,
+     "note": "[monitor] The operator ended this episode from the Monitor"
+    }
+   },
+   "score": {
+    "args": [
+     "score",
+     "--out",
+     "{episode_dir}",
+     "--outcome",
+     "{outcome}"
+    ],
+    "field": "outcome",
+    "options": [
+     {
+      "value": "success",
+      "label": "Screwed fully into the purple center hole",
+      "success": true
+     },
+     {
+      "value": "partial",
+      "label": "In the hole with the thread caught, but not fully in",
+      "success": false
+     },
+     {
+      "value": "failed",
+      "label": "Not aligned, or the thread did not catch",
+      "success": false
+     },
+     {
+      "value": "not_attempted",
+      "label": "Did not start screwing",
+      "success": false
+     }
+    ]
+   },
+   "model_images": true,
+   "fixed_instruction_file": "forceharness/prompts/real/screw_insert.md"
+  },
+  {
+   "id": "peel_vegetable",
+   "short": "Peel",
+   "name": "Peel the vegetable",
+   "summary": "At the start the operator sets the peeler at the starting point below the white cloth strip, at the right angle. Keeping that pose, without lifting or repositioning, press and peel along +x toward the tip, then start the next stroke, peeling continuously along the length without going after the root or the very tip. Each stroke defaults to 6–10 cm, limited by the remaining peelable length; keep peeling while there is progress. If skin catches on the blade, do not lift first; keep peeling in the same direction when the grip is stable and the path is peelable.",
+   "script": "scripts/real/peel_vegetable.py",
+   "max_actions": 60,
+   "guards": [
+    {
+     "label": "collision guard (12 N while holding)",
+     "value": 8,
+     "status": "warning"
+    },
+    {
+     "label": "session force cap",
+     "value": 25,
+     "status": "critical"
+    }
+   ],
+   "torque_cap": 3,
+   "conditions": [
+    {
+     "id": "A",
+     "label": "Force harness",
+     "harness_condition": "phys2_force",
+     "arm": "harness",
+     "args": [
+      "--condition",
+      "A"
+     ],
+     "note": "Full primitive menu and L2 force feedback; slide requests of 6–10 cm at 10 N of pressure (at most 20 N) are recommended, continuing while there is progress; if skin catches on the blade, do not lift first, just slide when the grip is stable and the path is peelable; no primitives are additionally disabled."
+    },
+    {
+     "id": "B",
+     "label": "Baseline (no force)",
+     "harness_condition": "none_guard",
+     "arm": "baseline",
+     "args": [
+      "--condition",
+      "B"
+     ],
+     "note": "Same task and cameras; position primitives plus move_until_contact (stops on contact, fixed at 5 N), no force readings, so it peels by height; guards still active."
+    }
+   ],
+   "output_args": [
+    "--out",
+    "{episode_dir}",
+    "--relay-dir",
+    "{relay_dir}"
+   ],
+   "demo": {
+    "args": [
+     "--max-actions",
+     "60",
+     "--max-minutes",
+     "60",
+     "--force-max",
+     "20",
+     "--slide-force-default",
+     "10"
+    ],
+    "scripted": true,
+    "relay_args": [
+     "--demo-model"
+    ],
+    "note": "Checks only the fixed task, the relay and the records: the demo has no physics model of the peeler or the cucumber/eggplant, so it cannot verify peeling."
+   },
+   "live": {
+    "args": [
+     "--live",
+     "--execute",
+     "--auto-confirm",
+     "--calibration",
+     "{calibration}",
+     "--max-actions",
+     "60",
+     "--max-minutes",
+     "60",
+     "--force-max",
+     "20",
+     "--slide-force-default",
+     "10"
+    ],
+    "inputs": {
+     "calibration": {
+      "label": "Force calibration",
+      "glob": [
+       "configs/real/force_calibration.json",
+       "configs/real/*calibration*.json"
+      ],
+      "default": "configs/real/force_calibration.json",
+      "required": true
+     }
+    },
+    "checklist": [
+     "I am next to the robot with the emergency stop in hand.",
+     "The peeler is gripped firmly in the hand at maximum grip force (about 70 N; tick \"Resume from the last episode / start holding an object\" below); the cucumber or eggplant is below the hand, fixed with tape or a clamp so it will not roll or slide while being peeled; no hands or other objects are near the blade.",
+     "The robot PC services (arm controller and gripper) are running, the gripper width reads normally (about 80 mm fully open), and the force calibration is available."
+    ],
+    "note": "The direction is +x, peeling from the white cloth strip toward the tip away from the base, starting on the +x side of the strip, without needing precision; the peeler angle comes from the starting pose the operator set; press down first, then peel continuously along +x, without moving to the root or the very tip to start; each stroke defaults to 6–10 cm and does not exceed the visible remaining peelable length; while there is progress, continue from the current position; if skin catches on the blade, do not lift the peeler; afterward confirm from the existing photos, without lifting again to check or finish. slide defaults to 10 N of pressure, at most 20 N; the 25 N raw force cap and the other guards are unchanged.",
+    "resume_held": {
+     "label": "Resume from the last episode / start holding an object: the gripper is closed on the object named below",
+     "args": [
+      "--resume-held={resume_held}"
+     ],
+     "default": "peeler",
+     "placeholder": "What it is holding, for example: eraser",
+     "note": "Tick this only when the gripper really is holding something: left in the hand when the last episode stopped, or closed on it before the start. The runner starts as \"holding this\" (the gripper no longer has to open first), tares once while still in the air, and tells the model in the first turn that the object is already in the hand. Do not tick this if the hand is empty and the gripper just cannot open to 78 mm: clear the area around the fingers and restart the gripper service, which homes the gripper and measures the opening again. This option has no effect when the gripper is actually open."
+    }
+   },
+   "graceful_done": {
+    "name": "done",
+    "args": {
+     "success": false,
+     "note": "[monitor] The operator ended this episode from the Monitor"
+    }
+   },
+   "score": {
+    "args": [
+     "score",
+     "--out",
+     "{episode_dir}",
+     "--outcome",
+     "{outcome}"
+    ],
+    "field": "outcome",
+    "options": [
+     {
+      "value": "success",
+      "label": "Peeled one or more continuous strips from the cloth strip toward the tip (+x)",
+      "success": true
+     },
+     {
+      "value": "partial",
+      "label": "Some skin came off, but short or broken",
+      "success": false
+     },
+     {
+      "value": "failed",
+      "label": "No skin came off (only scraped, or no contact)",
+      "success": false
+     },
+     {
+      "value": "not_attempted",
+      "label": "Did not start peeling",
+      "success": false
+     }
+    ]
+   },
+   "model_images": true,
+   "fixed_instruction_file": "forceharness/prompts/real/peel_vegetable.md"
+  },
+  {
+   "id": "usb_insert",
+   "short": "USB",
+   "name": "Insert the USB plug into the power strip",
+   "summary": "With the USB (USB-A) plug in the hand, insert it fully into one of the USB ports on the power strip below (either port works); the plug fits only one way.",
+   "script": "scripts/real/usb_insert.py",
+   "max_actions": 40,
+   "guards": [
+    {
+     "label": "collision guard (12 N while holding)",
+     "value": 8,
+     "status": "warning"
+    },
+    {
+     "label": "session force cap",
+     "value": 25,
+     "status": "critical"
+    }
+   ],
+   "torque_cap": 3,
+   "conditions": [
+    {
+     "id": "A",
+     "label": "Force harness",
+     "harness_condition": "phys2_force",
+     "arm": "harness",
+     "args": [
+      "--condition",
+      "A"
+     ],
+     "note": "Aligns and inserts on its own; all primitives and L2 force feedback are available (search finds the port, insert pushes in while sensing resistance and bottoming out, with at most 20 N of insertion force)."
+    },
+    {
+     "id": "B",
+     "label": "Baseline (no force)",
+     "harness_condition": "none_guard",
+     "arm": "baseline",
+     "args": [
+      "--condition",
+      "B"
+     ],
+     "note": "Same task and cameras; position primitives, no force readings, guards still active."
+    }
+   ],
+   "output_args": [
+    "--out",
+    "{episode_dir}",
+    "--relay-dir",
+    "{relay_dir}"
+   ],
+   "demo": {
+    "args": [
+     "--force-max",
+     "20",
+     "--insert-force-max",
+     "20"
+    ],
+    "scripted": true,
+    "relay_args": [
+     "--demo-model"
+    ],
+    "note": "Checks only the fixed task, the relay and the records: the demo has no physics model of the USB plug or port, so it cannot verify insertion."
+   },
+   "live": {
+    "args": [
+     "--live",
+     "--execute",
+     "--auto-confirm",
+     "--calibration",
+     "{calibration}",
+     "--force-max",
+     "20",
+     "--insert-force-max",
+     "20"
+    ],
+    "inputs": {
+     "calibration": {
+      "label": "Force calibration",
+      "glob": [
+       "configs/real/force_calibration.json",
+       "configs/real/*calibration*.json"
+      ],
+      "default": "configs/real/force_calibration.json",
+      "required": true
+     }
+    },
+    "checklist": [
+     "I am next to the robot with the emergency stop in hand.",
+     "The USB plug is already in the hand (tick \"Resume from the last episode / start holding an object\" below) or in the workspace; the power strip is below the hand with its ports visible, and stable enough not to be pushed away; the cable has enough slack and will not pull tight or tangle around the arm.",
+     "The robot PC services (arm controller and gripper) are running, the gripper width reads normally (about 80 mm fully open), and the force calibration is available."
+    ],
+    "note": "The goal is fixed: insert the USB plug fully into either USB-A port on the power strip. The position and orientation of the strip and the angle of the plug in the hand are not preset; the agent judges them from the photos of this episode. Existing primitives and safety guards apply; this task allows insert and push up to 20 N (the 25 N raw force cap is unchanged).",
+    "resume_held": {
+     "label": "Resume from the last episode / start holding an object: the gripper is closed on the object named below",
+     "args": [
+      "--resume-held={resume_held}"
+     ],
+     "default": "USB plug",
+     "placeholder": "What it is holding, for example: eraser",
+     "note": "Tick this only when the gripper really is holding something: left in the hand when the last episode stopped, or closed on it before the start. The runner starts as \"holding this\" (the gripper no longer has to open first), tares once while still in the air, and tells the model in the first turn that the object is already in the hand. Do not tick this if the hand is empty and the gripper just cannot open to 78 mm: clear the area around the fingers and restart the gripper service, which homes the gripper and measures the opening again. This option has no effect when the gripper is actually open."
+    }
+   },
+   "graceful_done": {
+    "name": "done",
+    "args": {
+     "success": false,
+     "note": "[monitor] The operator ended this episode from the Monitor"
+    }
+   },
+   "score": {
+    "args": [
+     "score",
+     "--out",
+     "{episode_dir}",
+     "--outcome",
+     "{outcome}"
+    ],
+    "field": "outcome",
+    "options": [
+     {
+      "value": "success",
+      "label": "Fully inserted into a USB port",
+      "success": true
+     },
+     {
+      "value": "partial",
+      "label": "In the port but not fully inserted",
+      "success": false
+     },
+     {
+      "value": "failed",
+      "label": "Not aligned with the port",
+      "success": false
+     },
+     {
+      "value": "not_attempted",
+      "label": "Did not start inserting",
+      "success": false
+     }
+    ]
+   },
+   "model_images": true,
+   "fixed_instruction_file": "forceharness/prompts/real/usb_insert.md"
+  },
+  {
+   "id": "can_weight_sort",
+   "short": "Weight sort",
+   "name": "Sort bottles by weight",
+   "summary": "Three water bottles hold different amounts of water: grip each by the cap and lift it to compare weights; put the heaviest on the white plate and the lightest on the green plate, and leave the middle one where it is.",
+   "script": "scripts/real/can_weight_sort.py",
+   "max_actions": 80,
+   "guards": [
+    {
+     "label": "collision guard (12 N while holding)",
+     "value": 8,
+     "status": "warning"
+    },
+    {
+     "label": "session force cap",
+     "value": 25,
+     "status": "critical"
+    }
+   ],
+   "torque_cap": 3,
+   "conditions": [
+    {
+     "id": "A",
+     "label": "Force harness",
+     "harness_condition": "phys2_force",
+     "arm": "harness",
+     "args": [
+      "--condition",
+      "A"
+     ],
+     "note": "All primitives and L2 force feedback are available: weigh the three bottles the same way and compare the readings after lift."
+    },
+    {
+     "id": "B",
+     "label": "Baseline (no force)",
+     "harness_condition": "none_guard",
+     "arm": "baseline",
+     "args": [
+      "--condition",
+      "B"
+     ],
+     "note": "Same task and cameras; position primitives, no force readings, guards still active."
+    }
+   ],
+   "output_args": [
+    "--out",
+    "{episode_dir}",
+    "--relay-dir",
+    "{relay_dir}"
+   ],
+   "demo": {
+    "args": [],
+    "scripted": true,
+    "relay_args": [
+     "--demo-model"
+    ],
+    "note": "Checks only the fixed task, the relay and the records: the demo has no physics model of the bottles, the plates or the water, so it cannot verify the sorting."
+   },
+   "live": {
+    "args": [
+     "--live",
+     "--execute",
+     "--auto-confirm",
+     "--calibration",
+     "{calibration}",
+     "--max-actions",
+     "80",
+     "--max-minutes",
+     "60"
+    ],
+    "inputs": {
+     "calibration": {
+      "label": "Force calibration",
+      "glob": [
+       "configs/real/force_calibration.json",
+       "configs/real/*calibration*.json"
+      ],
+      "default": "configs/real/force_calibration.json",
+      "required": true
+     }
+    },
+    "checklist": [
+     "I am next to the robot with the emergency stop in hand.",
+     "The three bottle caps are tight and do not leak, and each bottle can be lifted by its cap; the actual weights match the ones stated in the fixed task above (update it whenever the water changes); the heaviest stays below about 0.4 kg (about 0.3 kg is the recommended payload for the arm).",
+     "The bottles stand stably, at least about 12 cm apart center to center; the white and green plates are beyond the bottles (x ≤ 0.62 m) within |y| ≤ 0.24 m, ideally right in front of a gap between two bottles, with the near edge about 2 cm from the bottles; nothing else is in the way. The robot PC services (arm controller and gripper) are running and the force calibration is available; the gripper is open and empty."
+    ],
+    "note": "The goal is fixed; the order and the route are decided by the agent from the observations of this episode. Shuffle the bottles between episodes and score by hand afterwards using the actual weights; do not tell the model which position holds which bottle. Existing primitives and safety guards apply."
+   },
+   "graceful_done": {
+    "name": "done",
+    "args": {
+     "success": false,
+     "note": "[monitor] The operator ended this episode from the Monitor"
+    }
+   },
+   "score": {
+    "args": [
+     "score",
+     "--out",
+     "{episode_dir}",
+     "--outcome",
+     "{outcome}"
+    ],
+    "field": "outcome",
+    "options": [
+     {
+      "value": "success",
+      "label": "All three placed correctly",
+      "success": true
+     },
+     {
+      "value": "partial",
+      "label": "Only some placed correctly",
+      "success": false
+     },
+     {
+      "value": "failed",
+      "label": "None placed correctly",
+      "success": false
+     },
+     {
+      "value": "not_attempted",
+      "label": "Did not pick up any bottle",
+      "success": false
+     }
+    ]
+   },
+   "model_images": true,
+   "fixed_instruction_file": "forceharness/prompts/real/can_weight_sort.md"
+  },
+  {
+   "id": "touch_firmness",
+   "short": "Soft or hard",
+   "name": "Tell soft from hard by touch",
+   "summary": "Two objects of the same shape are wrapped in white cloth or paper, one soft and one hard; the agent tells them apart by touch and says which is soft and which is hard, using the operator's left and right (facing the robot).",
+   "script": "scripts/real/touch_firmness.py",
+   "max_actions": 15,
+   "guards": [
+    {
+     "label": "collision guard (12 N while holding)",
+     "value": 8,
+     "status": "warning"
+    },
+    {
+     "label": "session force cap",
+     "value": 25,
+     "status": "critical"
+    }
+   ],
+   "torque_cap": 3,
+   "conditions": [
+    {
+     "id": "A",
+     "label": "Force harness",
+     "harness_condition": "phys2_force",
+     "arm": "harness",
+     "args": [
+      "--condition",
+      "A"
+     ],
+     "note": "All primitives and L2 force feedback are available; how to judge is up to the agent, which gives its answer within 15 actions."
+    },
+    {
+     "id": "B",
+     "label": "Baseline (no force)",
+     "harness_condition": "none_guard",
+     "arm": "baseline",
+     "args": [
+      "--condition",
+      "B"
+     ],
+     "note": "Same task and cameras; position primitives, no force readings, guards still active; it likewise gives its answer within 15 actions."
+    }
+   ],
+   "output_args": [
+    "--out",
+    "{episode_dir}",
+    "--relay-dir",
+    "{relay_dir}"
+   ],
+   "demo": {
+    "args": [],
+    "scripted": true,
+    "relay_args": [
+     "--demo-model"
+    ],
+    "note": "Checks only the fixed task, the relay and the records: the demo has no physics model of a soft and a hard object, so it cannot verify the answer."
+   },
+   "live": {
+    "args": [
+     "--live",
+     "--execute",
+     "--auto-confirm",
+     "--calibration",
+     "{calibration}",
+     "--max-actions",
+     "15"
+    ],
+    "inputs": {
+     "calibration": {
+      "label": "Force calibration",
+      "glob": [
+       "configs/real/force_calibration.json",
+       "configs/real/*calibration*.json"
+      ],
+      "default": "configs/real/force_calibration.json",
+      "required": true
+     }
+    },
+    "checklist": [
+     "I am next to the robot with the emergency stop in hand.",
+     "The two wrapped objects are stable (pressing will not push them away), side by side, left and right, in front of the hand about 50 cm from the base (x ≈ 0.48–0.60 m); closer to the base the torque estimate is amplified and an error can end the episode. Nothing else is in the way.",
+     "The robot PC services (arm controller and gripper) are running and the force calibration is available; the gripper is open and empty."
+    ],
+    "note": "The goal is fixed; where to touch, how, and in what order are decided by the agent from the observations of this episode. Score by hand afterwards from what actually happened; do not give the ground truth to the model. Existing primitives and safety guards apply."
+   },
+   "graceful_done": {
+    "name": "done",
+    "args": {
+     "success": false,
+     "note": "[monitor] The operator ended this episode from the Monitor"
+    }
+   },
+   "score": {
+    "args": [
+     "score",
+     "--out",
+     "{episode_dir}",
+     "--outcome",
+     "{outcome}"
+    ],
+    "field": "outcome",
+    "options": [
+     {
+      "value": "success",
+      "label": "Soft and hard identified correctly",
+      "success": true
+     },
+     {
+      "value": "partial",
+      "label": "Touched, but could not tell, or touched only one",
+      "success": false
+     },
+     {
+      "value": "failed",
+      "label": "Wrong answer, or not finished",
+      "success": false
+     },
+     {
+      "value": "not_attempted",
+      "label": "Touched neither",
+      "success": false
+     }
+    ]
+   },
+   "model_images": true,
+   "fixed_instruction_file": "forceharness/prompts/real/touch_firmness.md"
+  },
+  {
+   "id": "free",
+   "short": "Free",
+   "name": "Free task",
+   "summary": "You write the task and the model decides how to do it: all primitives are available, and each turn it sees the wrist and exterior photos, the automatically detected object list and the tool result.",
+   "script": "scripts/real/free_task.py",
+   "max_actions": 40,
+   "instruction": {
+    "required": true,
+    "label": "Task",
+    "args": [
+     "--instruction={instruction}"
+    ],
+    "placeholder": "The task for the model, for example: there are two water bottles on the table; find the heavier one, then lay it on its side on the table.",
+    "note": "Goes into the system prompt in full (the same for both conditions); External relay and the scripted demo receive it too."
+   },
+   "guards": [
+    {
+     "label": "collision guard (12 N while holding)",
+     "value": 8,
+     "status": "warning"
+    },
+    {
+     "label": "session force cap",
+     "value": 15,
+     "status": "critical"
+    }
+   ],
+   "torque_cap": 3,
+   "conditions": [
+    {
+     "id": "A",
+     "label": "Force harness",
+     "harness_condition": "phys2_force",
+     "arm": "harness",
+     "args": [
+      "--condition",
+      "A"
+     ],
+     "note": "All 19 primitives (including move_until_contact, probe, push, slide, search, insert, lift, pull); tool results include the L2 force translation, still readings and the change across a grasp (weighing)."
+    },
+    {
+     "id": "B",
+     "label": "Baseline (no force)",
+     "harness_condition": "none_guard",
+     "arm": "baseline",
+     "args": [
+      "--condition",
+      "B"
+     ],
+     "note": "Only position primitives (move/rotate/point/turn/grasp/release/hold); tool results carry no force, and the 8 N collision guard still stops the arm."
+    }
+   ],
+   "output_args": [
+    "--out",
+    "{episode_dir}",
+    "--relay-dir",
+    "{relay_dir}"
+   ],
+   "demo": {
+    "args": [],
+    "scripted": true,
+    "relay_args": [
+     "--demo-model"
+    ],
+    "note": "Demo (no robot): a synthetic robot and two synthetic water bottles (left 0.32 kg, right 0.15 kg), no cameras, and a synthetic object list. With \"Scripted demo\" it plays a fixed action sequence; with any other model, the model decides through the relay."
+   },
+   "live": {
+    "args": [
+     "--live",
+     "--execute",
+     "--auto-confirm",
+     "--calibration",
+     "{calibration}"
+    ],
+    "inputs": {
+     "calibration": {
+      "label": "Force calibration",
+      "glob": [
+       "configs/real/force_calibration.json",
+       "configs/real/*calibration*.json"
+      ],
+      "default": "configs/real/force_calibration.json",
+      "required": true
+     }
+    },
+    "checklist": [
+     "I am next to the robot with the emergency stop in hand.",
+     "The table holds only what this task needs; the objects are light (about 0.3 kg at most) and can safely be dropped; from its starting position the hand can see the workspace from above.",
+     "The robot PC services (arm controller and gripper) are running, and nothing else around the arm is in the way."
+    ],
+    "note": "The model decides every step; CLOSE/OPEN are not confirmed one by one during the episode (--auto-confirm), and after releasing and confirming the gripper is open it can grasp again. All force, workspace and joint-limit guards stay in place; infeasible actions are refused before they start.",
+    "resume_held": {
+     "label": "Resume from the last episode / start holding an object: the gripper is closed on the object named below",
+     "args": [
+      "--resume-held={resume_held}"
+     ],
+     "default": "",
+     "placeholder": "What it is holding, for example: eraser",
+     "note": "Tick this only when the gripper really is holding something: left in the hand when the last episode stopped, or closed on it before the start. The runner starts as \"holding this\" (the gripper no longer has to open first), tares once while still in the air, and tells the model in the first turn that the object is already in the hand. Do not tick this if the hand is empty and the gripper just cannot open to 78 mm: clear the area around the fingers and restart the gripper service, which homes the gripper and measures the opening again. This option has no effect when the gripper is actually open."
+    }
+   },
+   "graceful_done": {
+    "name": "done",
+    "args": {
+     "success": false,
+     "note": "[monitor] The operator ended this episode from the Monitor"
+    }
+   },
+   "score": {
+    "args": [
+     "score",
+     "--out",
+     "{episode_dir}",
+     "--outcome",
+     "{outcome}"
+    ],
+    "field": "outcome",
+    "options": [
+     {
+      "value": "success",
+      "label": "Completed",
+      "success": true
+     },
+     {
+      "value": "partial",
+      "label": "Partly done",
+      "success": false
+     },
+     {
+      "value": "failed",
+      "label": "Not completed",
+      "success": false
+     },
+     {
+      "value": "not_attempted",
+      "label": "Not attempted",
+      "success": false
+     }
+    ]
+   },
+   "model_images": true
+  }
+ ]
+}

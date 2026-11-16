@@ -1,0 +1,26 @@
+# Expert force controller without designer priors (supplement): constants taken only from what the model is told.
+# Almost every constant of the expert follows from the instructions (the two masses, the 4 cm offset of a 0.8 kg bar,
+# 6-11 N breakaway and 15 N damage, the 15-35 deg unlock range), so for those tasks this variant equals the expert. The
+# exception is the search radius on peg_in_hole_hard: the expert uses 5 cm, chosen knowing the true hole noise (sigma
+# 15 mm). This config replaces it with the 1 cm of the hole's scene note ("up to about 1 cm error"); pitch (4 mm) and
+# pressing force (4 N) stay as in the expert. expert_default_params_b.yaml uses the 3 cm stated in the instruction.
+# Test seeds 9100-9149 (n = 50; the main table uses the first 20); all other settings as in expert.yaml.
+#   python scripts/run_matrix.py --matrix configs/hiddenphys/expert_default_params.yaml --agent scripted --workers 8
+run_name: expert_default_params
+n_episodes: 50
+seed_base: 9100
+cells:
+  - {task: peg_in_hole_hard, model: {name: scripted_r1cm, override: {search_radius: 0.01}}, fmt: phys2, vision: false, interface: force}
+episode:
+  max_turns: 40
+  max_tool_calls: 80
+  max_sim_time: 300.0
+  kp: 150.0
+  scene_noise_pos: 0.004
+  scene_noise_yaw_deg: 2.0
+  f_contact: 3.0
+  f_cap: 25.0
+  force_sign: -1.0
+  force_noise_std: 0.5
+  force_bias_std: 0.3
+  proprio: minimal

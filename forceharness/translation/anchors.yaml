@@ -1,0 +1,29 @@
+# Everyday anchors (used by phys4): model-independent hints that tie a physical quantity to everyday experience.
+# They only say "about"; they never encode a task threshold.
+mass_kg:
+  - [0.05, "a golf ball"]
+  - [0.10, "a bar of soap"]
+  - [0.17, "a smartphone"]
+  - [0.20, "an apple"]
+  - [0.37, "a can of soda"]
+  - [0.50, "a 500 ml bottle of water"]
+  - [0.75, "a 750 ml bottle of water"]
+  - [1.00, "a 1 litre carton of milk"]
+  - [1.50, "a laptop"]
+  - [2.00, "a 2 litre bottle"]
+  - [4.00, "a gallon jug of water"]
+friction:
+  - [0.15, "very slippery (ice-like, PTFE)"]
+  - [0.30, "slippery (paper or plastic on wood)"]
+  - [0.50, "moderate (wood on wood)"]
+  - [0.80, "grippy (rubber on wood)"]
+  - [1.10, "very grippy (rubber on rubber)"]
+stiffness_N_per_mm:
+  - [0.5, "very soft (sponge)"]
+  - [2.0, "soft (foam, bread)"]
+  - [10.0, "firm (cardboard, hard rubber)"]
+  - [100.0, "rigid (wood, metal, table top)"]
+impact_N:
+  - [3.0, "a light tap"]
+  - [10.0, "a firm bump"]
+  - [25.0, "a hard hit (the safety limit)"]

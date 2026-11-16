@@ -1,0 +1,8 @@
+# Example hand-eye calibration of the wrist camera: T_flange_camera, 4x4, row-major, metres.
+# base_T_camera = base_T_flange @ T_flange_camera (flange = panda_link8, camera = the D405 color optical frame).
+# This is the matrix of one printed camera mount; it is only right for that mount. Calibrate your own and save
+# it as configs/real/hand_eye.txt (git-ignored); this example is used only by offline tests and demos.
+-7.321940679273185593e-01 6.755101643748269158e-01 -8.705093174883361817e-02 4.091398746285548893e-02
+-6.810956593691170902e-01 -7.260495400416797640e-01 9.466133420680009070e-02 -3.269861803566062597e-02
+7.414044735365877409e-04 1.286004791264724056e-01 9.916962070552898245e-01 3.477160679920049402e-02
+0.000000000000000000e+00 0.000000000000000000e+00 0.000000000000000000e+00 1.000000000000000000e+00

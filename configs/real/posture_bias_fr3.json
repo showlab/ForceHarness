@@ -1,0 +1,75 @@
+{
+  "version": "posture_bias/1",
+  "created": "2026-10-26T12:15:27.064547+00:00",
+  "use_model": false,
+  "beta": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+  ],
+  "stats": {
+    "readings": 97,
+    "partial": "stations 0-3 of 6 (the run ended with a robot-side tracking stall at station 4)",
+    "same_pose_repeat_N": {
+      "p50": 0.036085581146700414,
+      "p90": 0.05955566880350797,
+      "n": 40
+    },
+    "posture_effect_N": {
+      "tilt_8_25": 0.4323003842468213,
+      "tilt_25_45": 0.2916000437629887,
+      "tilt_45_70": 0.4423177525893068
+    },
+    "same_pose_history_spread_N": {
+      "p50": 2.1502249844875285,
+      "max": 2.8844950288227422,
+      "stations": 2
+    },
+    "leave_one_station_out": {
+      "constant_zero_p50_N": [
+        1.53,
+        1.38,
+        1.36,
+        1.62
+      ],
+      "posture_model_p50_N": [
+        1.66,
+        1.72,
+        1.35,
+        1.62
+      ]
+    }
+  },
+  "hardware": "Franka Hand + finger pads + wrist D405 on its mount; recalibrate after any change to hand, camera mount, pads or cable routing",
+  "source": "recovered from the robot-side log of one episode (97 relaxed empty-hand readings over about 20 minutes)",
+  "method": "empty hand, controller relaxed before every reading. Posture effect ~0.3-0.4 N; history (arrival direction) 1.5-2 N dominates and a posture model does not reduce it -> not used; episodes use relax + a per-episode zero reading only"
+}

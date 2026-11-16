@@ -1,0 +1,43 @@
+# Main table, GPT-6 Astra: ForceHarness (phys2|force: self-terminating force primitives + physics translation layer at
+# L2) and the no-force control (none|pose: position primitives, kinematic tool results only) on all seven tasks, with
+# the same test seeds and success checks as the expert and learned rows.
+# GPT-6 Astra through the Responses API, reasoning effort low, no images. Test seeds 9100-9119 (n = 20 per cell,
+# 280 episodes). Episode budget 40 turns / 80 tool calls / 300 s; lock_or_stiff uses the soft arm (kp 150, as the learned
+# policies). Paid API calls: about US$0.28 per episode with force and US$0.50 without (list price), about US$110 in
+# total; check the count with --dry-run first. Runs resume, so a smaller n_episodes can be raised later.
+#   python scripts/run_matrix.py --matrix configs/hiddenphys/forceharness_astra.yaml --workers 6
+run_name: forceharness_astra
+n_episodes: 20
+seed_base: 9100
+cells:
+  - task: weight_sort
+    model: &astra {name: gpt-6-astra, provider: openai-responses, api_key_env: FH_API_KEY, reasoning_effort: low}
+    fmt: none
+    vision: false
+    interface: pose
+  - {task: weight_sort, model: *astra, fmt: phys2, vision: false, interface: force}
+  - {task: com_sort, model: *astra, fmt: none, vision: false, interface: pose}
+  - {task: com_sort, model: *astra, fmt: phys2, vision: false, interface: force}
+  - {task: wipe_hard, model: *astra, fmt: none, vision: false, interface: pose}
+  - {task: wipe_hard, model: *astra, fmt: phys2, vision: false, interface: force}
+  - {task: stack_gentle, model: *astra, fmt: none, vision: false, interface: pose}
+  - {task: stack_gentle, model: *astra, fmt: phys2, vision: false, interface: force}
+  - {task: peg_in_hole_hard, model: *astra, fmt: none, vision: false, interface: pose}
+  - {task: peg_in_hole_hard, model: *astra, fmt: phys2, vision: false, interface: force}
+  - {task: door_latch, model: *astra, fmt: none, vision: false, interface: pose}
+  - {task: door_latch, model: *astra, fmt: phys2, vision: false, interface: force}
+  - {task: lock_or_stiff, model: *astra, fmt: none, vision: false, interface: pose}
+  - {task: lock_or_stiff, model: *astra, fmt: phys2, vision: false, interface: force}
+episode:
+  max_turns: 40
+  max_tool_calls: 80
+  max_sim_time: 300.0
+  kp: 150.0
+  scene_noise_pos: 0.004
+  scene_noise_yaw_deg: 2.0
+  f_contact: 3.0
+  f_cap: 25.0
+  force_sign: -1.0
+  force_noise_std: 0.5
+  force_bias_std: 0.3
+  proprio: minimal

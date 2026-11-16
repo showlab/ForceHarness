@@ -1,0 +1,59 @@
+# Settings of the ForceBench results in the paper (main paper Table 4, zero-shot rows; supplement, ForceBench section).
+# scripts/forcebench/batch.py reads this file. The policy-server arguments of a job are, in this order (the last occurrence of
+# an option wins): server.args, the row's model and condition, the task's entry under `tasks`, the job's own `args`.
+#   python3 scripts/forcebench/batch.py --row sol_force --gpus 0:1            # one row: 8 tasks x seeds 300-309
+#   python3 scripts/forcebench/batch.py --row sol_force --dry-run             # show the resolved commands only
+# The paper's own job lists are not part of this repository; the rows below reproduce their settings with the released code.
+# Model rows make paid API calls (per-episode costs: docs/forcebench.md).
+
+seeds: {start: 300, count: 10}        # ForceBench evaluation seeds 300-309, one episode each
+
+evaluator:                            # our copy of ForceBench's evaluator, scripts/forcebench/eval_forcebench.py (via run.sh)
+  env_spacing: 30                     # m between parallel environments; at ForceBench's default of 6 m later kitchen scenes darken
+  max_steps: 1500                     # ForceBench's budget: 1,500 control steps at 15 Hz = 100 s of simulated time
+  args: [--no-privileged_geometry]    # RGB only: camera calibration is sent, true geometry only as logged diag_truth
+                                      # (run.sh always adds --execute_chunk 1: one action per tick, closed loop)
+
+server:                               # scripts/forcebench/policy_server.py arguments shared by every job
+  args: [--perception, rgb, --max-turns, "30", --max-tool-calls, "60", --f-cap, "25"]
+
+conditions:
+  force: [--interface, force, --fmt, phys2]       # ForceHarness: force primitives, L2 tool results (value, sigma, window, flags)
+  no_force: [--interface, pose, --fmt, none]      # control: no force tools, values or guidance; safety limits unchanged
+
+models:
+  gpt-6-astra: [--agent, llm, --model, gpt-6-astra, --provider, openai-responses, --reasoning-effort, low]
+  gpt-6.1-sol: [--agent, llm, --model, gpt-6.1-sol, --provider, openai-responses, --reasoning-effort, low]
+  claude-fable-5-2: [--agent, llm, --model, claude-fable-5-2, --provider, anthropic, --reasoning-effort, high,
+                     --api-key-env, ANTHROPIC_API_KEY]
+  scripted: [--agent, scripted]       # hand-written reference agent with classical vision; no API calls
+
+rows:
+  astra_no_force: {model: gpt-6-astra, condition: no_force}
+  astra_force: {model: gpt-6-astra, condition: force}         # Stove Press in the paper used an earlier report, see tasks below
+  sol_no_force: {model: gpt-6.1-sol, condition: no_force}
+  sol_force: {model: gpt-6.1-sol, condition: force}
+  fable_force: {model: claude-fable-5-2, condition: force}
+  # Not in Table 4: the scripted agent of the supplement, on the seeds its perception thresholds were tuned on and on held-out
+  # seeds; and the no-force Fable row, which the paper does not report.
+  scripted: {model: scripted, condition: force, seeds: {start: 300, count: 8}}
+  scripted_heldout: {model: scripted, condition: force, seeds: {start: 308, count: 8}}
+  fable_no_force: {model: claude-fable-5-2, condition: no_force}
+
+# Per-task policy-server arguments, applied in every row (`args`: extra arguments; `prim_overrides`: --prim-overrides JSON).
+# Faucet Turn and Faucet Direction: in the paper's runs the result of `turn` carried no resisting-moment numbers, hence
+# turn_quantities = false (Faucet Direction was not rerun with the numbers). --prim-overrides replaces the default overrides
+# as a whole, so the default contact lead cap max_lead_contact = 0.015 is repeated.
+tasks:
+  weight_sort: {}                     # its instruction keeps the older camera note, as in all paper runs of this task
+  rattle_sort: {}                     # CoM Sort
+  faucet_turn:
+    prim_overrides: {max_lead_contact: 0.015, turn_quantities: false}
+  faucet_force_turn:                  # Faucet Direction
+    prim_overrides: {max_lead_contact: 0.015, turn_quantities: false}
+  stove_turn_on: {}
+  stove_press_turn: {}                # per-side resistance report (Sol and Fable rows). Astra's row in Table 4 used an earlier
+                                      # report (mean over the second half of each turn, without the reading note); that
+                                      # version is not part of this code.
+  radmanso_drawer_sort_table: {}      # Drawer Pull
+  nut_thread: {}                      # revised instruction + locate_object, in all rows

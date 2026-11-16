@@ -1,0 +1,31 @@
+# Expert force controller and position-only controller on the shifted variants (distribution-shift column; scripted, no
+# API key). The position-only cell of peg_in_hole_hard_ood is expert_peg_position_only_shift.yaml. The script keeps
+# its constants: weight_sort_ood 0.30 / 0.45 kg (base 0.15 / 0.60), com_sort_ood offset 2.5 cm (base 4 cm), wipe_hard_ood
+# table 3 cm lower on average, peg_in_hole_hard_ood hole noise sigma 25 mm (base 15 mm).
+# Test seeds 9100-9149 (n = 50; the main table uses the first 20); all other settings as in expert.yaml.
+#   python scripts/run_matrix.py --matrix configs/hiddenphys/expert_shift.yaml --agent scripted --workers 8
+run_name: expert_shift
+n_episodes: 50
+seed_base: 9100
+cells:
+  - {task: weight_sort_ood, model: {name: scripted}, fmt: phys2, vision: false, interface: force}
+  - {task: com_sort_ood, model: {name: scripted}, fmt: phys2, vision: false, interface: force}
+  - {task: wipe_hard_ood, model: {name: scripted}, fmt: phys2, vision: false, interface: force}
+  - {task: peg_in_hole_hard_ood, model: {name: scripted}, fmt: phys2, vision: false, interface: force}
+  # position only (none|pose), the same script as the main table's position-only row
+  - {task: weight_sort_ood, model: {name: scripted}, fmt: none, vision: false, interface: pose}
+  - {task: com_sort_ood, model: {name: scripted}, fmt: none, vision: false, interface: pose}
+  - {task: wipe_hard_ood, model: {name: scripted}, fmt: none, vision: false, interface: pose}
+episode:
+  max_turns: 40
+  max_tool_calls: 80
+  max_sim_time: 300.0
+  kp: 150.0
+  scene_noise_pos: 0.004
+  scene_noise_yaw_deg: 2.0
+  f_contact: 3.0
+  f_cap: 25.0
+  force_sign: -1.0
+  force_noise_std: 0.5
+  force_bias_std: 0.3
+  proprio: minimal

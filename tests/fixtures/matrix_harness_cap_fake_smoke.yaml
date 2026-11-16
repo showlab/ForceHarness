@@ -1,0 +1,45 @@
+# Fake-model smoke matrix for the Code-as-Policies baseline (no network, no API key): 2 episodes per cell on development
+# seeds 9000-9001, episode settings as in configs/hiddenphys/code_as_policies.yaml. The programs are in
+# tests/fixtures/programs/ (written after the expert scripts); the last two cells are budget tests (tool calls and
+# simulated time). It needs MuJoCo, since the offline fake backend has no peg_in_hole_hard scene. From the repository root:
+#   python -c "from forceharness.eval.runner import run_matrix; \
+#     run_matrix('tests/fixtures/matrix_harness_cap_fake_smoke.yaml', workers=4, out_dir='runs')"
+run_name: harness_cap_fake_smoke
+n_episodes: 2
+seed_base: 9000
+cells:
+- task: weight_sort
+  model: &fake
+    name: fake-cap
+    provider: fake
+    harness: cap
+    fake_programs: tests/fixtures/programs
+  fmt: cap
+  vision: false
+  interface: force
+- {task: weight_sort, model: *fake, fmt: cap, vision: false, interface: pose}
+- {task: peg_in_hole_hard, model: *fake, fmt: cap, vision: false, interface: force}
+- {task: peg_in_hole_hard, model: *fake, fmt: cap, vision: false, interface: pose}
+- task: weight_sort
+  model: {name: fake-budget-calls, provider: fake, harness: cap, fake_program: tests/fixtures/programs/budget_calls.py}
+  fmt: cap
+  vision: false
+  interface: force
+- task: weight_sort
+  model: {name: fake-budget-sim, provider: fake, harness: cap, fake_program: tests/fixtures/programs/budget_sim.py}
+  fmt: cap
+  vision: false
+  interface: force
+episode:
+  max_turns: 40
+  max_tool_calls: 80
+  max_sim_time: 300.0
+  kp: 150.0
+  scene_noise_pos: 0.004
+  scene_noise_yaw_deg: 2.0
+  f_contact: 3.0
+  f_cap: 25.0
+  force_sign: -1.0
+  force_noise_std: 0.5
+  force_bias_std: 0.3
+  proprio: minimal

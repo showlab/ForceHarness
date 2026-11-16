@@ -1,0 +1,38 @@
+# Distribution-shift column, GPT-6 Astra: ForceHarness (phys2|force) and the no-force control (none|pose) on the four
+# shifted variants: weight_sort_ood
+# 0.30 / 0.45 kg; com_sort_ood offset 2.5 cm; wipe_hard_ood table 3 cm lower on average; peg_in_hole_hard_ood hole noise
+# sigma 25 mm. The model reads the new ranges in its instructions (the *_ood tasks in forceharness/hiddenphys/tasks.py).
+# Seeds 9100-9119 pair with the main table and the reference rows; the protocol is that of forceharness_astra.yaml.
+# Responses API, reasoning effort low, no images. 160 episodes: about US$23 at list price for the force row and about
+# US$40 for the no-force row (without force the model makes more calls).
+#   python scripts/run_matrix.py --matrix configs/hiddenphys/forceharness_shift.yaml --workers 6
+run_name: forceharness_shift
+n_episodes: 20
+seed_base: 9100
+cells:
+  - task: weight_sort_ood
+    model: &astra {name: gpt-6-astra, provider: openai-responses, api_key_env: FH_API_KEY, reasoning_effort: low}
+    fmt: phys2
+    vision: false
+    interface: force
+  - {task: com_sort_ood, model: *astra, fmt: phys2, vision: false, interface: force}
+  - {task: wipe_hard_ood, model: *astra, fmt: phys2, vision: false, interface: force}
+  - {task: peg_in_hole_hard_ood, model: *astra, fmt: phys2, vision: false, interface: force}
+  # no-force control (none|pose)
+  - {task: weight_sort_ood, model: *astra, fmt: none, vision: false, interface: pose}
+  - {task: com_sort_ood, model: *astra, fmt: none, vision: false, interface: pose}
+  - {task: wipe_hard_ood, model: *astra, fmt: none, vision: false, interface: pose}
+  - {task: peg_in_hole_hard_ood, model: *astra, fmt: none, vision: false, interface: pose}
+episode:
+  max_turns: 40
+  max_tool_calls: 80
+  max_sim_time: 300.0
+  kp: 150.0
+  scene_noise_pos: 0.004
+  scene_noise_yaw_deg: 2.0
+  f_contact: 3.0
+  f_cap: 25.0
+  force_sign: -1.0
+  force_noise_std: 0.5
+  force_bias_std: 0.3
+  proprio: minimal

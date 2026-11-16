@@ -1,0 +1,32 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+.venv/
+venv/
+.pytest_cache/
+
+# Secrets and site-specific configuration
+.env
+configs/real/robot.json
+configs/real/force_calibration.json
+configs/real/hand_eye.txt
+monitor/video.json
+
+# Outputs
+runs/
+logs/
+outputs/
+checkpoints/
+*.ckpt
+demos/
+hf_export/
+wandb/
+.DS_Store
+
+# Third-party checkouts used by the learned baselines (see docs/baselines.md)
+third_party/openpi/
+scripts/baselines/forcevla/third_party/

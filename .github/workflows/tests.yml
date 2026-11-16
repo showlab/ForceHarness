@@ -1,0 +1,52 @@
+name: tests
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  offline:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.11", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[dev,forcebench]"
+      - name: Offline tests (no simulator, robot or API key)
+        run: python -m pytest -q tests
+      - name: Web monitor tests
+        run: python -m pytest -q monitor/tests
+      - name: Environment report
+        run: python -m forceharness.doctor --target sim || true
+
+  sim:
+    # MuJoCo end to end without rendering: force-sign check + one expert episode per task.
+    runs-on: ubuntu-latest
+    continue-on-error: true      # make it required once it has been green on the hosted runners
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: System libraries for MuJoCo (EGL is loaded on import even without rendering)
+        run: sudo apt-get update && sudo apt-get install -y libegl1 libgl1
+      - name: Install
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[dev,sim]"
+      - name: Doctor
+        run: python -m forceharness.doctor --target sim
+      - name: check_sim (no rendering)
+        run: python scripts/check_sim.py --no-render --out runs
+      - name: Expert scripts for the mechanism tasks
+        run: |
+          python scripts/hiddenphys/door_latch_expert.py F --seeds 9100
+          python scripts/hiddenphys/lock_or_stiff_expert.py F --seeds 9100

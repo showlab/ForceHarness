@@ -1,0 +1,26 @@
+# Position-only controller on peg_in_hole_hard (forceharness/baselines/classical.py::PositionOnlyPeg), the "Position only"
+# cell of peg_in_hole_hard. Pose interface, no force: press once straight above the noisy hole position; if the peg does
+# not drop in, probe an Archimedean spiral (4 mm pitch, radius up to the 5 cm search_radius, the same prior as the
+# expert's force search) point by point (lift -> move across -> shallow press) and detect the drop from the tool height.
+# Point-by-point probing needs many calls, so the turn and call limits are raised (scripts cost nothing); the limit on
+# simulated time is the expert's 300 s.
+# Test seeds 9100-9149 (n = 50; the main table uses the first 20); all other settings as in expert.yaml.
+#   python scripts/run_matrix.py --matrix configs/hiddenphys/expert_peg_position_only.yaml --agent scripted --workers 8
+run_name: expert_peg_position_only
+n_episodes: 50
+seed_base: 9100
+cells:
+  - {task: peg_in_hole_hard, model: {name: scripted_pos_only, policy: pos_only_peg}, fmt: none, vision: false, interface: pose}
+episode:
+  max_turns: 500
+  max_tool_calls: 1200
+  max_sim_time: 300.0
+  kp: 150.0
+  scene_noise_pos: 0.004
+  scene_noise_yaw_deg: 2.0
+  f_contact: 3.0
+  f_cap: 25.0
+  force_sign: -1.0
+  force_noise_std: 0.5
+  force_bias_std: 0.3
+  proprio: minimal

@@ -1,0 +1,43 @@
+# Main table, Claude Fable 5.2: the same two rows as forceharness_astra.yaml (phys2|force = ForceHarness, none|pose = the
+# no-force control) with an identical protocol (test seeds 9100-9119, 40 turns / 80 tool calls / 300 s, kp 150, the same
+# noise). Only the model differs: claude-fable-5-2 through the Anthropic API at reasoning effort high (GPT-6 Astra runs at
+# low); thinking blocks are passed back unchanged and prompts are cached; refusal fallbacks are not enabled.
+# Paid API calls: at list price about US$70 for the 140 force episodes and US$280 for the 140 no-force episodes (without
+# force the model makes many more calls); prompt caching lowers the amount billed. Key in ANTHROPIC_API_KEY.
+#   python scripts/run_matrix.py --matrix configs/hiddenphys/forceharness_fable.yaml --workers 6
+run_name: forceharness_fable
+n_episodes: 20
+seed_base: 9100
+cells:
+  - task: weight_sort
+    model: &fable {name: claude-fable-5-2, provider: anthropic, api_key_env: ANTHROPIC_API_KEY, reasoning_effort: high}
+    fmt: phys2
+    vision: false
+    interface: force
+  - {task: com_sort, model: *fable, fmt: phys2, vision: false, interface: force}
+  - {task: wipe_hard, model: *fable, fmt: phys2, vision: false, interface: force}
+  - {task: stack_gentle, model: *fable, fmt: phys2, vision: false, interface: force}
+  - {task: peg_in_hole_hard, model: *fable, fmt: phys2, vision: false, interface: force}
+  - {task: door_latch, model: *fable, fmt: phys2, vision: false, interface: force}
+  - {task: lock_or_stiff, model: *fable, fmt: phys2, vision: false, interface: force}
+  # no-force control (none|pose)
+  - {task: weight_sort, model: *fable, fmt: none, vision: false, interface: pose}
+  - {task: com_sort, model: *fable, fmt: none, vision: false, interface: pose}
+  - {task: wipe_hard, model: *fable, fmt: none, vision: false, interface: pose}
+  - {task: stack_gentle, model: *fable, fmt: none, vision: false, interface: pose}
+  - {task: peg_in_hole_hard, model: *fable, fmt: none, vision: false, interface: pose}
+  - {task: door_latch, model: *fable, fmt: none, vision: false, interface: pose}
+  - {task: lock_or_stiff, model: *fable, fmt: none, vision: false, interface: pose}
+episode:
+  max_turns: 40
+  max_tool_calls: 80
+  max_sim_time: 300.0
+  kp: 150.0
+  scene_noise_pos: 0.004
+  scene_noise_yaw_deg: 2.0
+  f_contact: 3.0
+  f_cap: 25.0
+  force_sign: -1.0
+  force_noise_std: 0.5
+  force_bias_std: 0.3
+  proprio: minimal

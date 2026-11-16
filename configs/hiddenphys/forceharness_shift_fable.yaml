@@ -1,0 +1,35 @@
+# Distribution-shift column, Claude Fable 5.2: ForceHarness (phys2|force) and the no-force control (none|pose) on the four
+# shifted variants (see forceharness_shift.yaml for the shifts). Protocol of forceharness_fable.yaml (Anthropic API,
+# reasoning effort high, no images); seeds 9100-9119 pair with the main table.
+# Paid API calls: about US$0.2 per force episode and US$0.7 per no-force episode at list price, 160 episodes.
+#   python scripts/run_matrix.py --matrix configs/hiddenphys/forceharness_shift_fable.yaml --workers 6
+run_name: forceharness_shift_fable
+n_episodes: 20
+seed_base: 9100
+cells:
+  - task: weight_sort_ood
+    model: &fable {name: claude-fable-5-2, provider: anthropic, api_key_env: ANTHROPIC_API_KEY, reasoning_effort: high}
+    fmt: phys2
+    vision: false
+    interface: force
+  - {task: com_sort_ood, model: *fable, fmt: phys2, vision: false, interface: force}
+  - {task: wipe_hard_ood, model: *fable, fmt: phys2, vision: false, interface: force}
+  - {task: peg_in_hole_hard_ood, model: *fable, fmt: phys2, vision: false, interface: force}
+  # no-force control (none|pose)
+  - {task: weight_sort_ood, model: *fable, fmt: none, vision: false, interface: pose}
+  - {task: com_sort_ood, model: *fable, fmt: none, vision: false, interface: pose}
+  - {task: wipe_hard_ood, model: *fable, fmt: none, vision: false, interface: pose}
+  - {task: peg_in_hole_hard_ood, model: *fable, fmt: none, vision: false, interface: pose}
+episode:
+  max_turns: 40
+  max_tool_calls: 80
+  max_sim_time: 300.0
+  kp: 150.0
+  scene_noise_pos: 0.004
+  scene_noise_yaw_deg: 2.0
+  f_contact: 3.0
+  f_cap: 25.0
+  force_sign: -1.0
+  force_noise_std: 0.5
+  force_bias_std: 0.3
+  proprio: minimal

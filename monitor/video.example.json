@@ -1,0 +1,20 @@
+{
+  "_comment": "Session videos from one global camera. Copy this file to monitor/video.json (or pass --video-config) and fill it in; the monitor reads video.json when it exists, else this example, which keeps recording off. When enabled, each episode the monitor starts in a mode listed in modes (by default only real-robot episodes) is recorded by the RealSense camera with the serial in camera.serial into one MP4 in dir (a leading runs/ means the runs folder in use), named after the episode. The recorder fhmon/camrec.py runs under python (an interpreter with pyrealsense2 and Pillow; empty = the monitor's own interpreter) and needs ffmpeg on PATH. List in never_open the serials of the cameras the harness itself opens (exterior and wrist cameras): a RealSense can only be opened by one program at a time, so the recorder refuses to touch them. Restart the monitor to apply changes; --no-video skips recording for one run.",
+  "enabled": false,
+  "modes": ["live"],
+  "dir": "runs/videos",
+  "python": "",
+  "camera": {
+    "serial": "",
+    "label": "Global camera",
+    "width": 1280,
+    "height": 720,
+    "fps": 15
+  },
+  "never_open": {
+    "EXTERIOR_CAMERA_SERIAL": "Exterior camera: the harness takes the photo of each turn with it and uses it when grasping",
+    "WRIST_CAMERA_SERIAL": "Wrist camera: the harness uses it to measure objects"
+  },
+  "tail_s": 3,
+  "max_hours": 4
+}

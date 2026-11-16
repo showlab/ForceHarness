@@ -1,0 +1,44 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "forceharness"
+version = "0.1.0"
+description = "ForceHarness: turning force into action and physics for frozen frontier models (harness, HiddenPhys benchmark, ForceBench adapter, real-robot reference)."
+readme = "README.md"
+license = {text = "MIT"}
+requires-python = ">=3.10"
+dependencies = [
+  "numpy>=1.24",
+  "scipy>=1.10",
+  "pyyaml>=6",
+  "pillow>=9",
+  "matplotlib>=3.7",
+  "tqdm",
+  "python-dotenv",
+  "openai>=1.40",
+  "anthropic>=0.40",
+]
+
+[project.optional-dependencies]
+# HiddenPhys benchmark (MuJoCo). robosuite 1.5.1 needs exactly mujoco 3.2.7: newer MuJoCo fails an assertion in get_joint_qpos_addr.
+sim = ["robosuite==1.5.1", "mujoco==3.2.7", "opencv-python-headless<4.13", "imageio", "imageio-ffmpeg"]
+# ForceHarness as a ForceBench policy server (Isaac Sim / Isaac Lab are installed by scripts/forcebench/install.sh).
+forcebench = ["websockets>=12", "msgpack>=1.0", "opencv-python-headless<4.13"]
+# Real robot, workstation side (the robot PC side lives in robot_side/ and has its own environment).
+real = ["pyrealsense2"]
+# Learned-policy baselines (Diffusion Policy; pi0.5 and ForceVLA additionally need openpi, see docs/baselines.md).
+learn = ["torch>=2.1", "torchvision>=0.16", "diffusers>=0.27", "opencv-python-headless<4.13"]
+# Hugging Face dataset export (raw episodes + LeRobot v2.1).
+data = ["huggingface_hub>=0.24", "opencv-python-headless<4.13", "pyarrow>=14"]
+dev = ["pytest>=7"]
+
+[tool.setuptools.packages.find]
+include = ["forceharness*"]
+
+[tool.setuptools.package-data]
+forceharness = ["prompts/**/*.md", "translation/*.yaml", "eval/*.yaml"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

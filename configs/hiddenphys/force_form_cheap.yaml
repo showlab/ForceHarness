@@ -1,0 +1,33 @@
+# Form-of-force ablation on five cheaper GPT-5.x models (raw numbers, event words, force plot, derived signals, quantities
+# at L1), 5 episodes per cell on test seeds 9100-9104; the none (no force) and phys2 (L2) cells come from
+# forceharness_other_models.yaml (same models, tasks and seeds). Chat completions with reasoning off while tools are in
+# use, as in forceharness_other_models.yaml. peg_in_hole_hard and door_latch are left out because these models are at the
+# floor there with or without force; gpt-5.4-nano is left out because it is missing from the price table.
+# Paid API calls: 625 episodes, about US$27 at list price.
+#   python scripts/run_matrix.py --matrix configs/hiddenphys/force_form_cheap.yaml --workers 6
+run_name: force_form_cheap
+tasks: [weight_sort, com_sort, wipe_hard, stack_gentle, lock_or_stiff]
+models:
+  - {name: gpt-5.4, provider: openai, api_key_env: FH_API_KEY, reasoning_effort: none}
+  - {name: gpt-5.2, provider: openai, api_key_env: FH_API_KEY, reasoning_effort: none}
+  - {name: gpt-5.1, provider: openai, api_key_env: FH_API_KEY, reasoning_effort: none}
+  - {name: gpt-5.4-mini, provider: openai, api_key_env: FH_API_KEY, reasoning_effort: none}
+  - {name: gpt-5.6-luna, provider: openai, api_key_env: FH_API_KEY, reasoning_effort: none}
+formats: [raw, events, plot, signals, phys1]
+vision: [false]
+interfaces: [force]
+n_episodes: 5
+seed_base: 9100
+episode:
+  max_turns: 40
+  max_tool_calls: 80
+  max_sim_time: 300.0
+  kp: 150.0
+  scene_noise_pos: 0.004
+  scene_noise_yaw_deg: 2.0
+  f_contact: 3.0
+  f_cap: 25.0
+  force_sign: -1.0
+  force_noise_std: 0.5
+  force_bias_std: 0.3
+  proprio: minimal

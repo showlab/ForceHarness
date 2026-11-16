@@ -1,0 +1,16 @@
+# Example job list for scripts/forcebench/batch.py:
+#   python3 scripts/forcebench/batch.py configs/forcebench/jobs_example.yaml --gpus 0:1 --dry-run   # check, then drop --dry-run
+# A job is one run directory: one evaluator process with n parallel environments on seeds seed .. seed+n-1. `row` takes the
+# policy-server arguments of a row of configs/forcebench/paper_settings.yaml; `args` adds or overrides arguments; `eval_args`
+# replaces the evaluator arguments of the settings. Drawer Pull is the task where force matters most in the paper.
+
+# Scripted reference agent: no API key, no cost. A quick check that the installation works.
+- {run: fb_dr_scripted_check, task: radmanso_drawer_sort_table, seed: 300, n: 2, args: [--agent, scripted]}
+
+# Privileged mode (noisy true positions instead of images): both sides must be switched.
+- {run: fb_ws_scripted_privileged, task: weight_sort, seed: 300, n: 2, args: [--agent, scripted, --perception, privileged],
+   eval_args: --privileged_geometry}
+
+# GPT-6.1 Sol with ForceHarness and the no-force control, as in the paper (paid API calls; needs FH_API_KEY).
+- {run: fb_dr_sol_force, task: radmanso_drawer_sort_table, row: sol_force}
+- {run: fb_dr_sol_no_force, task: radmanso_drawer_sort_table, row: sol_no_force}

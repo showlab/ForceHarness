@@ -1,0 +1,58 @@
+{
+  "version": "force_calibration/1",
+  "source": "live",
+  "physical_validation": true,
+  "note": "Values of the authors' Franka FR3, for reference only: verified and gripper_verified are false, so the runner refuses live runs with this file. Copy it to configs/real/force_calibration.json, replace every value with your own measurements (docs/real_robot.md section 6), and only then set verified and gripper_verified to true.",
+  "verified": false,
+  "force_sign": -1,
+  "gripper_verified": false,
+  "torque_verified": false,
+  "bias_force": [
+    -1.2160067119495486,
+    0.9122516014973499,
+    2.243420624301261
+  ],
+  "bias_torque": [
+    0.32923624772572463,
+    0.07585851608038384,
+    -0.02003852143126981
+  ],
+  "gripper_delta_wrench": [
+    -0.614621613486654,
+    -0.1778950935073773,
+    1.143903889634033,
+    0.0,
+    0.0,
+    0.0
+  ],
+  "closed_width_m": 0.029049948789179325,
+  "width_scope_m": 0.003,
+  "noise_std": 0.0688240944049337,
+  "bias_std": 0.07472134788057394,
+  "position_low": [
+    0.2,
+    -0.3,
+    0.16
+  ],
+  "position_high": [
+    0.65,
+    0.3,
+    0.55
+  ],
+  "flange_quaternion": [
+    0.8946480751037598,
+    -0.38873666524887085,
+    -0.20738893747329712,
+    0.07401688396930695
+  ],
+  "orientation_radius_rad": 1.2,
+  "observed_position_radius_m": 0.00012986645115640872,
+  "observed_rotation_radius_rad": 0.0002846178367466851,
+  "bottle_id": "heavy sealed water bottle gripped by its cap",
+  "mass_kg": 0.3207,
+  "scope": "Relative contact and resistance signals, also while a held object is turned up to 90 deg (orientation and translation scopes are record-only); absolute payload only about +/-20 g at the calibration hover pose; torque not certified. Limits guard danger, not imperfection.",
+  "calibration_status": "payload force at the hover pose with a closed cap grasp verified; torque NOT certified",
+  "translation_scope_record_only": true,
+  "derived_from": "two-mass bottle-cap calibration (heavy station entry), with its pose scope widened",
+  "orientation_scope_record_only": true
+}

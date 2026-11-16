@@ -1,0 +1,151 @@
+# The two main rows (phys2|force = ForceHarness, none|pose = the no-force control) for seven more OpenAI models, 5 episodes
+# per cell on test seeds 9100-9104: GPT-6.1 Sol through the Responses API (reasoning effort low), and the GPT-5.x models
+# through chat completions with reasoning off (reasoning_effort none, as needed when tools are in use). Same protocol as
+# forceharness_astra.yaml (no images, 40 turns / 80 tool calls / 300 s, lock_or_stiff with the soft arm).
+# The none and phys2 cells of the form-of-force table for seeds 9100-9104 come from this run.
+# Paid API calls: about US$25 for the 490 episodes (list price); gpt-5.4-nano is missing from the price table, so its cost
+# is estimated with the gpt-5.4 price and overstated.
+#   python scripts/run_matrix.py --matrix configs/hiddenphys/forceharness_other_models.yaml --workers 6
+run_name: forceharness_other_models
+n_episodes: 5
+seed_base: 9100
+cells:
+  - task: weight_sort
+    model: &m0 {name: gpt-6.1-sol, provider: openai-responses, api_key_env: FH_API_KEY, reasoning_effort: low}
+    fmt: none
+    vision: false
+    interface: pose
+  - {task: weight_sort, model: *m0, fmt: phys2, vision: false, interface: force}
+  - {task: com_sort, model: *m0, fmt: none, vision: false, interface: pose}
+  - {task: com_sort, model: *m0, fmt: phys2, vision: false, interface: force}
+  - {task: wipe_hard, model: *m0, fmt: none, vision: false, interface: pose}
+  - {task: wipe_hard, model: *m0, fmt: phys2, vision: false, interface: force}
+  - {task: stack_gentle, model: *m0, fmt: none, vision: false, interface: pose}
+  - {task: stack_gentle, model: *m0, fmt: phys2, vision: false, interface: force}
+  - {task: peg_in_hole_hard, model: *m0, fmt: none, vision: false, interface: pose}
+  - {task: peg_in_hole_hard, model: *m0, fmt: phys2, vision: false, interface: force}
+  - {task: door_latch, model: *m0, fmt: none, vision: false, interface: pose}
+  - {task: door_latch, model: *m0, fmt: phys2, vision: false, interface: force}
+  - {task: lock_or_stiff, model: *m0, fmt: none, vision: false, interface: pose}
+  - {task: lock_or_stiff, model: *m0, fmt: phys2, vision: false, interface: force}
+  - task: weight_sort
+    model: &m1 {name: gpt-5.4, provider: openai, api_key_env: FH_API_KEY, reasoning_effort: none}
+    fmt: none
+    vision: false
+    interface: pose
+  - {task: weight_sort, model: *m1, fmt: phys2, vision: false, interface: force}
+  - {task: com_sort, model: *m1, fmt: none, vision: false, interface: pose}
+  - {task: com_sort, model: *m1, fmt: phys2, vision: false, interface: force}
+  - {task: wipe_hard, model: *m1, fmt: none, vision: false, interface: pose}
+  - {task: wipe_hard, model: *m1, fmt: phys2, vision: false, interface: force}
+  - {task: stack_gentle, model: *m1, fmt: none, vision: false, interface: pose}
+  - {task: stack_gentle, model: *m1, fmt: phys2, vision: false, interface: force}
+  - {task: peg_in_hole_hard, model: *m1, fmt: none, vision: false, interface: pose}
+  - {task: peg_in_hole_hard, model: *m1, fmt: phys2, vision: false, interface: force}
+  - {task: door_latch, model: *m1, fmt: none, vision: false, interface: pose}
+  - {task: door_latch, model: *m1, fmt: phys2, vision: false, interface: force}
+  - {task: lock_or_stiff, model: *m1, fmt: none, vision: false, interface: pose}
+  - {task: lock_or_stiff, model: *m1, fmt: phys2, vision: false, interface: force}
+  - task: weight_sort
+    model: &m2 {name: gpt-5.2, provider: openai, api_key_env: FH_API_KEY, reasoning_effort: none}
+    fmt: none
+    vision: false
+    interface: pose
+  - {task: weight_sort, model: *m2, fmt: phys2, vision: false, interface: force}
+  - {task: com_sort, model: *m2, fmt: none, vision: false, interface: pose}
+  - {task: com_sort, model: *m2, fmt: phys2, vision: false, interface: force}
+  - {task: wipe_hard, model: *m2, fmt: none, vision: false, interface: pose}
+  - {task: wipe_hard, model: *m2, fmt: phys2, vision: false, interface: force}
+  - {task: stack_gentle, model: *m2, fmt: none, vision: false, interface: pose}
+  - {task: stack_gentle, model: *m2, fmt: phys2, vision: false, interface: force}
+  - {task: peg_in_hole_hard, model: *m2, fmt: none, vision: false, interface: pose}
+  - {task: peg_in_hole_hard, model: *m2, fmt: phys2, vision: false, interface: force}
+  - {task: door_latch, model: *m2, fmt: none, vision: false, interface: pose}
+  - {task: door_latch, model: *m2, fmt: phys2, vision: false, interface: force}
+  - {task: lock_or_stiff, model: *m2, fmt: none, vision: false, interface: pose}
+  - {task: lock_or_stiff, model: *m2, fmt: phys2, vision: false, interface: force}
+  - task: weight_sort
+    model: &m3 {name: gpt-5.1, provider: openai, api_key_env: FH_API_KEY, reasoning_effort: none}
+    fmt: none
+    vision: false
+    interface: pose
+  - {task: weight_sort, model: *m3, fmt: phys2, vision: false, interface: force}
+  - {task: com_sort, model: *m3, fmt: none, vision: false, interface: pose}
+  - {task: com_sort, model: *m3, fmt: phys2, vision: false, interface: force}
+  - {task: wipe_hard, model: *m3, fmt: none, vision: false, interface: pose}
+  - {task: wipe_hard, model: *m3, fmt: phys2, vision: false, interface: force}
+  - {task: stack_gentle, model: *m3, fmt: none, vision: false, interface: pose}
+  - {task: stack_gentle, model: *m3, fmt: phys2, vision: false, interface: force}
+  - {task: peg_in_hole_hard, model: *m3, fmt: none, vision: false, interface: pose}
+  - {task: peg_in_hole_hard, model: *m3, fmt: phys2, vision: false, interface: force}
+  - {task: door_latch, model: *m3, fmt: none, vision: false, interface: pose}
+  - {task: door_latch, model: *m3, fmt: phys2, vision: false, interface: force}
+  - {task: lock_or_stiff, model: *m3, fmt: none, vision: false, interface: pose}
+  - {task: lock_or_stiff, model: *m3, fmt: phys2, vision: false, interface: force}
+  - task: weight_sort
+    model: &m4 {name: gpt-5.4-mini, provider: openai, api_key_env: FH_API_KEY, reasoning_effort: none}
+    fmt: none
+    vision: false
+    interface: pose
+  - {task: weight_sort, model: *m4, fmt: phys2, vision: false, interface: force}
+  - {task: com_sort, model: *m4, fmt: none, vision: false, interface: pose}
+  - {task: com_sort, model: *m4, fmt: phys2, vision: false, interface: force}
+  - {task: wipe_hard, model: *m4, fmt: none, vision: false, interface: pose}
+  - {task: wipe_hard, model: *m4, fmt: phys2, vision: false, interface: force}
+  - {task: stack_gentle, model: *m4, fmt: none, vision: false, interface: pose}
+  - {task: stack_gentle, model: *m4, fmt: phys2, vision: false, interface: force}
+  - {task: peg_in_hole_hard, model: *m4, fmt: none, vision: false, interface: pose}
+  - {task: peg_in_hole_hard, model: *m4, fmt: phys2, vision: false, interface: force}
+  - {task: door_latch, model: *m4, fmt: none, vision: false, interface: pose}
+  - {task: door_latch, model: *m4, fmt: phys2, vision: false, interface: force}
+  - {task: lock_or_stiff, model: *m4, fmt: none, vision: false, interface: pose}
+  - {task: lock_or_stiff, model: *m4, fmt: phys2, vision: false, interface: force}
+  - task: weight_sort
+    model: &m5 {name: gpt-5.6-luna, provider: openai, api_key_env: FH_API_KEY, reasoning_effort: none}
+    fmt: none
+    vision: false
+    interface: pose
+  - {task: weight_sort, model: *m5, fmt: phys2, vision: false, interface: force}
+  - {task: com_sort, model: *m5, fmt: none, vision: false, interface: pose}
+  - {task: com_sort, model: *m5, fmt: phys2, vision: false, interface: force}
+  - {task: wipe_hard, model: *m5, fmt: none, vision: false, interface: pose}
+  - {task: wipe_hard, model: *m5, fmt: phys2, vision: false, interface: force}
+  - {task: stack_gentle, model: *m5, fmt: none, vision: false, interface: pose}
+  - {task: stack_gentle, model: *m5, fmt: phys2, vision: false, interface: force}
+  - {task: peg_in_hole_hard, model: *m5, fmt: none, vision: false, interface: pose}
+  - {task: peg_in_hole_hard, model: *m5, fmt: phys2, vision: false, interface: force}
+  - {task: door_latch, model: *m5, fmt: none, vision: false, interface: pose}
+  - {task: door_latch, model: *m5, fmt: phys2, vision: false, interface: force}
+  - {task: lock_or_stiff, model: *m5, fmt: none, vision: false, interface: pose}
+  - {task: lock_or_stiff, model: *m5, fmt: phys2, vision: false, interface: force}
+  - task: weight_sort
+    model: &m6 {name: gpt-5.4-nano, provider: openai, api_key_env: FH_API_KEY, reasoning_effort: none}
+    fmt: none
+    vision: false
+    interface: pose
+  - {task: weight_sort, model: *m6, fmt: phys2, vision: false, interface: force}
+  - {task: com_sort, model: *m6, fmt: none, vision: false, interface: pose}
+  - {task: com_sort, model: *m6, fmt: phys2, vision: false, interface: force}
+  - {task: wipe_hard, model: *m6, fmt: none, vision: false, interface: pose}
+  - {task: wipe_hard, model: *m6, fmt: phys2, vision: false, interface: force}
+  - {task: stack_gentle, model: *m6, fmt: none, vision: false, interface: pose}
+  - {task: stack_gentle, model: *m6, fmt: phys2, vision: false, interface: force}
+  - {task: peg_in_hole_hard, model: *m6, fmt: none, vision: false, interface: pose}
+  - {task: peg_in_hole_hard, model: *m6, fmt: phys2, vision: false, interface: force}
+  - {task: door_latch, model: *m6, fmt: none, vision: false, interface: pose}
+  - {task: door_latch, model: *m6, fmt: phys2, vision: false, interface: force}
+  - {task: lock_or_stiff, model: *m6, fmt: none, vision: false, interface: pose}
+  - {task: lock_or_stiff, model: *m6, fmt: phys2, vision: false, interface: force}
+episode:
+  max_turns: 40
+  max_tool_calls: 80
+  max_sim_time: 300.0
+  kp: 150.0
+  scene_noise_pos: 0.004
+  scene_noise_yaw_deg: 2.0
+  f_contact: 3.0
+  f_cap: 25.0
+  force_sign: -1.0
+  force_noise_std: 0.5
+  force_bias_std: 0.3
+  proprio: minimal

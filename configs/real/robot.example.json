@@ -1,0 +1,37 @@
+{
+  "_comment": "Site file of the real robot. Copy to configs/real/robot.json (git-ignored) and replace every <...> value; keys starting with _ are notes. Read by forceharness/real/config.py (load_robot_config); $FH_ROBOT_CONFIG or --robot-config can point to another file. See docs/real_robot.md.",
+  "robot_pc": {
+    "_comment": "The real-time computer that runs Polymetis (robot server and gripper server) and, started over SSH per episode, the robot-side worker.",
+    "ssh_host": "<robot-pc-ssh-alias>",
+    "_ssh_host_note": "Host name or alias from ~/.ssh/config with key-based login (BatchMode is used, so a password prompt fails).",
+    "conda_prefix": "<path-to-the-polymetis-environment>",
+    "_conda_prefix_note": "Root of the Python 3.8 environment with polymetis, torchcontrol and torch; exported as CONDA_PREFIX, which Polymetis reads on import. A leading ~/ means the remote home.",
+    "python": "<path-to-the-polymetis-environment>/bin/python",
+    "hardware_config": "<path-to-fairo>/polymetis/polymetis/conf/robot_client/franka_hardware.yaml",
+    "_hardware_config_note": "Polymetis robot-client configuration whose executable_cfg.limits joint limits the worker intersects with its own.",
+    "deploy_dir": "~/forceharness_robot_side",
+    "_deploy_dir_note": "Folder on the robot PC that holds the content-addressed bundles (scripts/real/deploy_robot_side.py --deploy creates it).",
+    "urdf": null,
+    "_urdf_note": "Panda URDF for the offline self-test only; null = the one that ships with Polymetis (or $FH_URDF on the robot PC).",
+    "robot_port": 50051,
+    "gripper_port": 50052,
+    "ssh_options": []
+  },
+  "gripper": {
+    "_comment": "Franka Hand through the Polymetis gripper server. Changed for the public release; not yet validated on hardware.",
+    "force_N": 60.0,
+    "speed_m_s": 0.05,
+    "open_width_m": 0.08,
+    "command_timeout_s": 20.0
+  },
+  "cameras": {
+    "_comment": "RealSense cameras on the workstation: wrist D405 (RGB-D, used for all measurements) and exterior D435 (RGB only).",
+    "exterior_serial": "<EXTERIOR_D435_SERIAL>",
+    "wrist_serial": "<WRIST_D405_SERIAL>",
+    "hand_eye_file": "configs/real/hand_eye.txt",
+    "_hand_eye_file_note": "4x4 T_flange_camera of the wrist camera; relative paths are relative to the repository root. configs/real/hand_eye.example.txt shows the format.",
+    "python": null,
+    "_python_note": "Interpreter that runs the capture process and has pyrealsense2; null = the interpreter running the runner.",
+    "capture_timeout_s": 20.0
+  }
+}

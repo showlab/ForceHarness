@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="fhmon-token" content="{{TOKEN}}">
+  <title>ForceHarness Monitor</title>
+  <link rel="icon" href="/static/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/static/css/app.css?v={{VERSION}}">
+  <script type="module" src="/static/js/app.js?v={{VERSION}}"></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#/live" aria-label="ForceHarness Monitor">
+      <svg class="brand-mark" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M4 18 L10 12 L14 15 L20 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M16 6 H20 V10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <span class="brand-name">ForceHarness</span>
+      <span class="brand-sub">Monitor</span>
+    </a>
+    <nav class="tabs" aria-label="Pages">
+      <a href="#/live" data-tab="live">Live</a>
+      <a href="#/episodes" data-tab="episodes">Records</a>
+      <a href="#/videos" data-tab="videos">Videos</a>
+      <a href="#/compare" data-tab="compare">Compare</a>
+      <a href="#/settings" data-tab="settings">Settings</a>
+    </nav>
+    <div class="topbar-right">
+      <span id="live-flag" class="live-flag" hidden>Real robot enabled</span>
+      <span id="conn" class="conn" data-state="idle" title="Connection to the monitor server">
+        <span class="dot"></span><span class="conn-text">Connected</span>
+      </span>
+      <button id="theme" class="icon-btn" type="button" title="Toggle light/dark" aria-label="Toggle light/dark">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 1 0 9 9 7 7 0 0 1-9-9z" fill="currentColor"/></svg>
+      </button>
+    </div>
+  </header>
+  <main id="view" tabindex="-1"></main>
+  <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+</body>
+</html>

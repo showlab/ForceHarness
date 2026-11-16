@@ -1,0 +1,28 @@
+# Smoke test of the full stack with the scripted expert: no API key and no model calls.
+# Two cells use the conditions of the paper's main rows (phys2|force = ForceHarness tools and translation, none|pose = the
+# no-force control) and one the shifted variant, with the paper's episode protocol, on development seeds 9000-9001.
+# It runs on both backends; the offline fake backend models only the weight_sort scene (a tool, a table and one cube):
+#   python scripts/run_matrix.py --matrix configs/hiddenphys/smoke.yaml --agent scripted --backend fake --workers 1 --out runs
+#   python scripts/run_matrix.py --matrix configs/hiddenphys/smoke.yaml --agent scripted --workers 2 --out runs   # MuJoCo
+# On the pose interface the expert cannot weigh the cube and guesses "light", so it fails on the heavy seed (9001).
+# scripts/check_sim.py checks a MuJoCo installation on all five tasks of the expert, including camera rendering.
+run_name: smoke
+n_episodes: 2
+seed_base: 9000
+cells:
+  - {task: weight_sort, model: {name: scripted}, fmt: phys2, vision: false, interface: force}
+  - {task: weight_sort, model: {name: scripted}, fmt: none, vision: false, interface: pose}
+  - {task: weight_sort_ood, model: {name: scripted}, fmt: phys2, vision: false, interface: force}
+episode:
+  max_turns: 40
+  max_tool_calls: 80
+  max_sim_time: 300.0
+  kp: 150.0
+  scene_noise_pos: 0.004
+  scene_noise_yaw_deg: 2.0
+  f_contact: 3.0
+  f_cap: 25.0
+  force_sign: -1.0
+  force_noise_std: 0.5
+  force_bias_std: 0.3
+  proprio: minimal

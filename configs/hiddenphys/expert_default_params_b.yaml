@@ -1,0 +1,24 @@
+# Expert force controller with the peg search radius taken from the instruction (supplement). The peg_in_hole_hard
+# instruction says the hole position "can be off by up to about 3 cm" (the "about 1 cm" appears only in the scene note
+# inherited from the base task), so this variant searches up to 3 cm instead of the expert's 5 cm; everything else as in
+# the expert. expert_default_params.yaml is the 1 cm variant.
+# Test seeds 9100-9149 (n = 50; the main table uses the first 20); all other settings as in expert.yaml.
+#   python scripts/run_matrix.py --matrix configs/hiddenphys/expert_default_params_b.yaml --agent scripted --workers 8
+run_name: expert_default_params_b
+n_episodes: 50
+seed_base: 9100
+cells:
+  - {task: peg_in_hole_hard, model: {name: scripted_r3cm, override: {search_radius: 0.03}}, fmt: phys2, vision: false, interface: force}
+episode:
+  max_turns: 40
+  max_tool_calls: 80
+  max_sim_time: 300.0
+  kp: 150.0
+  scene_noise_pos: 0.004
+  scene_noise_yaw_deg: 2.0
+  f_contact: 3.0
+  f_cap: 25.0
+  force_sign: -1.0
+  force_noise_std: 0.5
+  force_bias_std: 0.3
+  proprio: minimal

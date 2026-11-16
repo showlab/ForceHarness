@@ -1,0 +1,37 @@
+# Expert force controller and position-only controller (scripted, no API key): the "Expert force controller" and
+# "Position only" rows of the main table and the supplement's script table, on the five tasks that
+# forceharness/baselines/expert.py covers.
+#   phys2|force: the expert script on the force interface (self-terminating force primitives + physics translation).
+#   none|pose:   the same script on the pose interface; without force it can only guess the mass and the centre of mass,
+#                wipes at the nominal table height and places the cube at the nominal height.
+# peg_in_hole_hard has its own position-only script (expert_peg_position_only.yaml); door_latch and lock_or_stiff use
+# scripts/hiddenphys/door_latch_expert.py and lock_or_stiff_expert.py on the same seeds.
+# Test seeds 9100-9149 (n = 50; the main table uses the first 20); tuning used other seeds. The episode budget is the
+# widest one of the model rows (40 turns / 80 tool calls / 300 s), so the scripts are never at a disadvantage.
+#   python scripts/run_matrix.py --matrix configs/hiddenphys/expert.yaml --agent scripted --workers 8
+run_name: expert
+n_episodes: 50
+seed_base: 9100
+cells:
+  - {task: weight_sort, model: {name: scripted}, fmt: phys2, vision: false, interface: force}
+  - {task: com_sort, model: {name: scripted}, fmt: phys2, vision: false, interface: force}
+  - {task: wipe_hard, model: {name: scripted}, fmt: phys2, vision: false, interface: force}
+  - {task: stack_gentle, model: {name: scripted}, fmt: phys2, vision: false, interface: force}
+  - {task: peg_in_hole_hard, model: {name: scripted}, fmt: phys2, vision: false, interface: force}
+  - {task: weight_sort, model: {name: scripted}, fmt: none, vision: false, interface: pose}
+  - {task: com_sort, model: {name: scripted}, fmt: none, vision: false, interface: pose}
+  - {task: wipe_hard, model: {name: scripted}, fmt: none, vision: false, interface: pose}
+  - {task: stack_gentle, model: {name: scripted}, fmt: none, vision: false, interface: pose}
+episode:
+  max_turns: 40
+  max_tool_calls: 80
+  max_sim_time: 300.0
+  kp: 150.0
+  scene_noise_pos: 0.004
+  scene_noise_yaw_deg: 2.0
+  f_contact: 3.0
+  f_cap: 25.0
+  force_sign: -1.0
+  force_noise_std: 0.5
+  force_bias_std: 0.3
+  proprio: minimal

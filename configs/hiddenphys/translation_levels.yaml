@@ -1,0 +1,562 @@
+# Translation levels (an extra run that the paper does not report): the four levels of the physics translation layer (phys1-phys4) against derived signals
+# (signals) and the no-force control (none|pose), on the two decision tasks (weight_sort, com_sort), with five GPT-5.x
+# models (chat completions, reasoning off). No images; proprio minimal (tool results give no durations, simulated time
+# or finger opening while closed, which would leak the load); classes balanced by seed.
+# 60 cells x 8 episodes = 480 episodes on seeds 5000-5007, about US$20-30 at list price.
+#   python scripts/run_matrix.py --matrix configs/hiddenphys/translation_levels.yaml --workers 6
+run_name: translation_levels
+n_episodes: 8
+seed_base: 5000
+cells:
+- task: weight_sort
+  model:
+    name: gpt-5.1
+    provider: openai
+    api_key_env: FH_API_KEY
+    reasoning_effort: none
+  fmt: none
+  vision: false
+  interface: pose
+- task: weight_sort
+  model:
+    name: gpt-5.1
+    provider: openai
+    api_key_env: FH_API_KEY
+    reasoning_effort: none
+  fmt: signals
+  vision: false
+  interface: force
+- task: weight_sort
+  model:
+    name: gpt-5.1
+    provider: openai
+    api_key_env: FH_API_KEY
+    reasoning_effort: none
+  fmt: phys1
+  vision: false
+  interface: force
+- task: weight_sort
+  model:
+    name: gpt-5.1
+    provider: openai
+    api_key_env: FH_API_KEY
+    reasoning_effort: none
+  fmt: phys2
+  vision: false
+  interface: force
+- task: weight_sort
+  model:
+    name: gpt-5.1
+    provider: openai
+    api_key_env: FH_API_KEY
+    reasoning_effort: none
+  fmt: phys3
+  vision: false
+  interface: force
+- task: weight_sort
+  model:
+    name: gpt-5.1
+    provider: openai
+    api_key_env: FH_API_KEY
+    reasoning_effort: none
+  fmt: phys4
+  vision: false
+  interface: force
+- task: weight_sort
+  model:
+    name: gpt-5.4-mini
+    provider: openai
+    api_key_env: FH_API_KEY
+    reasoning_effort: none
+  fmt: none
+  vision: false
+  interface: pose
+- task: weight_sort
+  model:
+    name: gpt-5.4-mini
+    provider: openai
+    api_key_env: FH_API_KEY
+    reasoning_effort: none
+  fmt: signals
+  vision: false
+  interface: force
+- task: weight_sort
+  model:
+    name: gpt-5.4-mini
+    provider: openai
+    api_key_env: FH_API_KEY
+    reasoning_effort: none
+  fmt: phys1
+  vision: false
+  interface: force
+- task: weight_sort
+  model:
+    name: gpt-5.4-mini
+    provider: openai
+    api_key_env: FH_API_KEY
+    reasoning_effort: none
+  fmt: phys2
+  vision: false
+  interface: force
+- task: weight_sort
+  model:
+    name: gpt-5.4-mini
+    provider: openai
+    api_key_env: FH_API_KEY
+    reasoning_effort: none
+  fmt: phys3
+  vision: false
+  interface: force
+- task: weight_sort
+  model:
+    name: gpt-5.4-mini
+    provider: openai
+    api_key_env: FH_API_KEY
+    reasoning_effort: none
+  fmt: phys4
+  vision: false
+  interface: force
+- task: weight_sort
+  model:
+    name: gpt-5.2
+    provider: openai
+    api_key_env: FH_API_KEY
+    reasoning_effort: none
+  fmt: none
+  vision: false
+  interface: pose
+- task: weight_sort
+  model:
+    name: gpt-5.2
+    provider: openai
+    api_key_env: FH_API_KEY
+    reasoning_effort: none
+  fmt: signals
+  vision: false
+  interface: force
+- task: weight_sort
+  model:
+    name: gpt-5.2
+    provider: openai
+    api_key_env: FH_API_KEY
+    reasoning_effort: none
+  fmt: phys1
+  vision: false
+  interface: force
+- task: weight_sort
+  model:
+    name: gpt-5.2
+    provider: openai
+    api_key_env: FH_API_KEY
+    reasoning_effort: none
+  fmt: phys2
+  vision: false
+  interface: force
+- task: weight_sort
+  model:
+    name: gpt-5.2
+    provider: openai
+    api_key_env: FH_API_KEY
+    reasoning_effort: none
+  fmt: phys3
+  vision: false
+  interface: force
+- task: weight_sort
+  model:
+    name: gpt-5.2
+    provider: openai
+    api_key_env: FH_API_KEY
+    reasoning_effort: none
+  fmt: phys4
+  vision: false
+  interface: force
+- task: weight_sort
+  model:
+    name: gpt-5.4
+    provider: openai
+    api_key_env: FH_API_KEY
+    reasoning_effort: none
+  fmt: none
+  vision: false
+  interface: pose
+- task: weight_sort
+  model:
+    name: gpt-5.4
+    provider: openai
+    api_key_env: FH_API_KEY
+    reasoning_effort: none
+  fmt: signals
+  vision: false
+  interface: force
+- task: weight_sort
+  model:
+    name: gpt-5.4
+    provider: openai
+    api_key_env: FH_API_KEY
+    reasoning_effort: none
+  fmt: phys1
+  vision: false
+  interface: force
+- task: weight_sort
+  model:
+    name: gpt-5.4
+    provider: openai
+    api_key_env: FH_API_KEY
+    reasoning_effort: none
+  fmt: phys2
+  vision: false
+  interface: force
+- task: weight_sort
+  model:
+    name: gpt-5.4
+    provider: openai
+    api_key_env: FH_API_KEY
+    reasoning_effort: none
+  fmt: phys3
+  vision: false
+  interface: force
+- task: weight_sort
+  model:
+    name: gpt-5.4
+    provider: openai
+    api_key_env: FH_API_KEY
+    reasoning_effort: none
+  fmt: phys4
+  vision: false
+  interface: force
+- task: weight_sort
+  model:
+    name: gpt-5.5
+    provider: openai
+    api_key_env: FH_API_KEY
+    reasoning_effort: none
+  fmt: none
+  vision: false
+  interface: pose
+- task: weight_sort
+  model:
+    name: gpt-5.5
+    provider: openai
+    api_key_env: FH_API_KEY
+    reasoning_effort: none
+  fmt: signals
+  vision: false
+  interface: force
+- task: weight_sort
+  model:
+    name: gpt-5.5
+    provider: openai
+    api_key_env: FH_API_KEY
+    reasoning_effort: none
+  fmt: phys1
+  vision: false
+  interface: force
+- task: weight_sort
+  model:
+    name: gpt-5.5
+    provider: openai
+    api_key_env: FH_API_KEY
+    reasoning_effort: none
+  fmt: phys2
+  vision: false
+  interface: force
+- task: weight_sort
+  model:
+    name: gpt-5.5
+    provider: openai
+    api_key_env: FH_API_KEY
+    reasoning_effort: none
+  fmt: phys3
+  vision: false
+  interface: force
+- task: weight_sort
+  model:
+    name: gpt-5.5
+    provider: openai
+    api_key_env: FH_API_KEY
+    reasoning_effort: none
+  fmt: phys4
+  vision: false
+  interface: force
+- task: com_sort
+  model:
+    name: gpt-5.1
+    provider: openai
+    api_key_env: FH_API_KEY
+    reasoning_effort: none
+  fmt: none
+  vision: false
+  interface: pose
+- task: com_sort
+  model:
+    name: gpt-5.1
+    provider: openai
+    api_key_env: FH_API_KEY
+    reasoning_effort: none
+  fmt: signals
+  vision: false
+  interface: force
+- task: com_sort
+  model:
+    name: gpt-5.1
+    provider: openai
+    api_key_env: FH_API_KEY
+    reasoning_effort: none
+  fmt: phys1
+  vision: false
+  interface: force
+- task: com_sort
+  model:
+    name: gpt-5.1
+    provider: openai
+    api_key_env: FH_API_KEY
+    reasoning_effort: none
+  fmt: phys2
+  vision: false
+  interface: force
+- task: com_sort
+  model:
+    name: gpt-5.1
+    provider: openai
+    api_key_env: FH_API_KEY
+    reasoning_effort: none
+  fmt: phys3
+  vision: false
+  interface: force
+- task: com_sort
+  model:
+    name: gpt-5.1
+    provider: openai
+    api_key_env: FH_API_KEY
+    reasoning_effort: none
+  fmt: phys4
+  vision: false
+  interface: force
+- task: com_sort
+  model:
+    name: gpt-5.4-mini
+    provider: openai
+    api_key_env: FH_API_KEY
+    reasoning_effort: none
+  fmt: none
+  vision: false
+  interface: pose
+- task: com_sort
+  model:
+    name: gpt-5.4-mini
+    provider: openai
+    api_key_env: FH_API_KEY
+    reasoning_effort: none
+  fmt: signals
+  vision: false
+  interface: force
+- task: com_sort
+  model:
+    name: gpt-5.4-mini
+    provider: openai
+    api_key_env: FH_API_KEY
+    reasoning_effort: none
+  fmt: phys1
+  vision: false
+  interface: force
+- task: com_sort
+  model:
+    name: gpt-5.4-mini
+    provider: openai
+    api_key_env: FH_API_KEY
+    reasoning_effort: none
+  fmt: phys2
+  vision: false
+  interface: force
+- task: com_sort
+  model:
+    name: gpt-5.4-mini
+    provider: openai
+    api_key_env: FH_API_KEY
+    reasoning_effort: none
+  fmt: phys3
+  vision: false
+  interface: force
+- task: com_sort
+  model:
+    name: gpt-5.4-mini
+    provider: openai
+    api_key_env: FH_API_KEY
+    reasoning_effort: none
+  fmt: phys4
+  vision: false
+  interface: force
+- task: com_sort
+  model:
+    name: gpt-5.2
+    provider: openai
+    api_key_env: FH_API_KEY
+    reasoning_effort: none
+  fmt: none
+  vision: false
+  interface: pose
+- task: com_sort
+  model:
+    name: gpt-5.2
+    provider: openai
+    api_key_env: FH_API_KEY
+    reasoning_effort: none
+  fmt: signals
+  vision: false
+  interface: force
+- task: com_sort
+  model:
+    name: gpt-5.2
+    provider: openai
+    api_key_env: FH_API_KEY
+    reasoning_effort: none
+  fmt: phys1
+  vision: false
+  interface: force
+- task: com_sort
+  model:
+    name: gpt-5.2
+    provider: openai
+    api_key_env: FH_API_KEY
+    reasoning_effort: none
+  fmt: phys2
+  vision: false
+  interface: force
+- task: com_sort
+  model:
+    name: gpt-5.2
+    provider: openai
+    api_key_env: FH_API_KEY
+    reasoning_effort: none
+  fmt: phys3
+  vision: false
+  interface: force
+- task: com_sort
+  model:
+    name: gpt-5.2
+    provider: openai
+    api_key_env: FH_API_KEY
+    reasoning_effort: none
+  fmt: phys4
+  vision: false
+  interface: force
+- task: com_sort
+  model:
+    name: gpt-5.4
+    provider: openai
+    api_key_env: FH_API_KEY
+    reasoning_effort: none
+  fmt: none
+  vision: false
+  interface: pose
+- task: com_sort
+  model:
+    name: gpt-5.4
+    provider: openai
+    api_key_env: FH_API_KEY
+    reasoning_effort: none
+  fmt: signals
+  vision: false
+  interface: force
+- task: com_sort
+  model:
+    name: gpt-5.4
+    provider: openai
+    api_key_env: FH_API_KEY
+    reasoning_effort: none
+  fmt: phys1
+  vision: false
+  interface: force
+- task: com_sort
+  model:
+    name: gpt-5.4
+    provider: openai
+    api_key_env: FH_API_KEY
+    reasoning_effort: none
+  fmt: phys2
+  vision: false
+  interface: force
+- task: com_sort
+  model:
+    name: gpt-5.4
+    provider: openai
+    api_key_env: FH_API_KEY
+    reasoning_effort: none
+  fmt: phys3
+  vision: false
+  interface: force
+- task: com_sort
+  model:
+    name: gpt-5.4
+    provider: openai
+    api_key_env: FH_API_KEY
+    reasoning_effort: none
+  fmt: phys4
+  vision: false
+  interface: force
+- task: com_sort
+  model:
+    name: gpt-5.5
+    provider: openai
+    api_key_env: FH_API_KEY
+    reasoning_effort: none
+  fmt: none
+  vision: false
+  interface: pose
+- task: com_sort
+  model:
+    name: gpt-5.5
+    provider: openai
+    api_key_env: FH_API_KEY
+    reasoning_effort: none
+  fmt: signals
+  vision: false
+  interface: force
+- task: com_sort
+  model:
+    name: gpt-5.5
+    provider: openai
+    api_key_env: FH_API_KEY
+    reasoning_effort: none
+  fmt: phys1
+  vision: false
+  interface: force
+- task: com_sort
+  model:
+    name: gpt-5.5
+    provider: openai
+    api_key_env: FH_API_KEY
+    reasoning_effort: none
+  fmt: phys2
+  vision: false
+  interface: force
+- task: com_sort
+  model:
+    name: gpt-5.5
+    provider: openai
+    api_key_env: FH_API_KEY
+    reasoning_effort: none
+  fmt: phys3
+  vision: false
+  interface: force
+- task: com_sort
+  model:
+    name: gpt-5.5
+    provider: openai
+    api_key_env: FH_API_KEY
+    reasoning_effort: none
+  fmt: phys4
+  vision: false
+  interface: force
+episode:
+  max_turns: 25
+  max_tool_calls: 60
+  kp: 150.0
+  scene_noise_pos: 0.004
+  scene_noise_yaw_deg: 2.0
+  f_contact: 3.0
+  f_cap: 25.0
+  force_sign: -1.0
+  force_noise_std: 0.5
+  force_bias_std: 0.3
+  proprio: minimal

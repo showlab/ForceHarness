@@ -1,0 +1,29 @@
+# Form-of-force ablation, GPT-6.1 Sol: the same force-primitive interface with only the rendering of force in the tool
+# results changed (raw numbers, event words, force plot, derived signals, quantities at L1), on all seven tasks with test
+# seeds 9100-9109 and the protocol of forceharness_astra.yaml. The none (no force) and phys2 (L2) cells come from
+# forceharness_other_models.yaml (seeds 9100-9104) and force_form_sol_ext.yaml (seeds 9105-9109);
+# scripts/hiddenphys/force_form_table.py combines the three runs. Responses API, reasoning effort low, no images.
+# Paid API calls: 350 episodes, about US$25 at list price.
+#   python scripts/run_matrix.py --matrix configs/hiddenphys/force_form_sol.yaml --workers 6
+run_name: force_form_sol
+tasks: [weight_sort, com_sort, wipe_hard, stack_gentle, peg_in_hole_hard, door_latch, lock_or_stiff]
+models:
+  - {name: gpt-6.1-sol, provider: openai-responses, api_key_env: FH_API_KEY, reasoning_effort: low}
+formats: [raw, events, plot, signals, phys1]
+vision: [false]
+interfaces: [force]
+n_episodes: 10
+seed_base: 9100
+episode:
+  max_turns: 40
+  max_tool_calls: 80
+  max_sim_time: 300.0
+  kp: 150.0
+  scene_noise_pos: 0.004
+  scene_noise_yaw_deg: 2.0
+  f_contact: 3.0
+  f_cap: 25.0
+  force_sign: -1.0
+  force_noise_std: 0.5
+  force_bias_std: 0.3
+  proprio: minimal
