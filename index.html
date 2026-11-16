@@ -1,0 +1,306 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ForceHarness: Turning Force into Action and Physics for Frozen Frontier Models</title>
+<meta name="description" content="ForceHarness lets a frozen frontier model use wrist force through self-terminating force primitives and a physics translation layer, with no demonstrations or finetuning.">
+<meta property="og:title" content="ForceHarness: Turning Force into Action and Physics for Frozen Frontier Models">
+<meta property="og:description" content="A harness that lets frozen frontier models use wrist force, on a real arm, ForceBench and HiddenPhys.">
+<link rel="canonical" href="https://showlab.github.io/ForceHarness/">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://showlab.github.io/ForceHarness/">
+<meta property="og:image" content="https://showlab.github.io/ForceHarness/assets/img/og_card.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="ForceHarness: Turning Force into Action and Physics for Frozen Frontier Models">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/png" href="assets/img/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/site.css?v=20261116a">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="top">
+  <div class="wrap top-row">
+    <a class="brand" href="#" aria-label="ForceHarness home">
+      <img src="assets/img/logo-badge.svg" alt="" width="28" height="28">
+      <span>ForceHarness</span>
+    </a>
+    <nav aria-label="Sections">
+      <a href="#real">Real robot</a>
+      <a href="#bench">Simulation</a>
+      <a href="#call">One call</a>
+      <a href="#method">Method</a>
+      <a href="#start">Get started</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+
+<section class="hero">
+  <div class="wrap">
+    <h1><span class="w-force">Force</span><span class="w-harness">Harness</span></h1>
+    <p class="lede">Turning force into action and physics for frozen frontier models</p>
+    <p class="authors">Ke Sun, Kevin Yuchen Ma, Yike Zhang, Yanzhe Chen, Mike Zheng Shou<sup>&dagger;</sup></p>
+    <p class="affil">Show Lab, National University of Singapore <span aria-hidden="true">&middot;</span> <sup>&dagger;</sup>Corresponding author</p>
+    <ul class="links" aria-label="Resources">
+      <li><span class="btn is-soon" aria-disabled="true">Paper<small>arXiv soon</small></span></li>
+      <li><a class="btn" href="https://github.com/showlab/ForceHarness">Code</a></li>
+      <li><span class="btn is-soon" aria-disabled="true">Dataset<small>soon</small></span></li>
+      <li><a class="btn" href="#real">Robot videos</a></li>
+    </ul>
+  </div>
+  <!-- Main video: the project film. It has narration, so it waits for a click. -->
+  <figure id="film" class="film wrap">
+    <video id="film-video" controls playsinline preload="metadata" poster="assets/video/forceharness_film.jpg">
+      <source src="assets/video/forceharness_film.mp4" type="video/mp4">
+    </video>
+  </figure>
+</section>
+
+<section id="real" class="real">
+  <div class="wrap">
+    <h2>Six tasks on a real arm</h2>
+    <p class="section-intro">A Franka FR3 with joint torque sensors but no wrist force sensor, run zero-shot by GPT-6 Astra.
+      Each clip is one whole autonomous episode, sped up as marked; switch a tile to see the no-force control, which keeps
+      the same harness and safety limits but removes force tools, force values and force guidance.</p>
+  </div>
+  <figure class="teaser wrap-wide">
+    <video id="teaser" autoplay muted loop playsinline preload="metadata" poster="assets/video/teaser.jpg">
+      <source src="assets/video/teaser.mp4" type="video/mp4">
+    </video>
+    <figcaption>All six tasks with ForceHarness, each tile marked with its playback speed. Below, every episode in full
+      next to its no-force control.</figcaption>
+  </figure>
+  <div class="clip-grid wrap-wide" data-clips></div>
+  <div class="wrap">
+  <p class="table-lead">Successes out of 10 episodes per condition; for GPT-6 Astra every task differs at p &lt; 0.01
+    (Fisher's exact test).</p>
+  <div class="table-scroll">
+    <table class="real-table">
+      <thead>
+        <tr><th scope="col">Task</th><th scope="col">No force<br><span>GPT-6 Astra</span></th><th scope="col">ForceHarness<br><span>GPT-6 Astra</span></th><th scope="col">ForceHarness<br><span>GPT-6.1 Sol</span></th></tr>
+      </thead>
+      <tbody></tbody>
+      <tfoot><tr><th scope="row">Total</th><td>2/60</td><td class="win">54/60</td><td>47/60</td></tr></tfoot>
+    </table>
+  </div>
+  </div>
+</section>
+
+<section id="bench" class="bench wrap">
+  <h2>Simulation</h2>
+  <p class="section-intro">The same harness on the public ForceBench suite in Isaac Lab and on HiddenPhys, our MuJoCo
+    benchmark, where classical, learned and zero-shot methods run on identical episodes.</p>
+  <div class="bench-block">
+    <h3>ForceBench <span>Isaac Lab, 8 tasks, RGB images only, 10 episodes per task</span></h3>
+    <div class="frames frames-8" data-frames="fb"></div>
+    <div class="table-scroll">
+      <table class="num-table">
+        <thead><tr><th scope="col">Method</th><th>Weight</th><th>CoM</th><th>Faucet</th><th>Faucet dir.</th><th>Stove</th><th>Stove press</th><th>Drawer</th><th>Nut</th><th>Mean</th></tr></thead>
+        <tbody>
+          <tr class="muted-row"><th scope="row">&pi;<sub>0.5</sub> + Prompt Fusion, trained<sup>*</sup></th><td>88.0</td><td>56.5</td><td>21.0</td><td>41.5</td><td>16.0</td><td>2.5</td><td>23.0</td><td>34.0</td><td>35.3</td></tr>
+          <tr><th scope="row">GPT-6 Astra, no force</th><td>80</td><td>50</td><td>100</td><td>50</td><td>100</td><td>80</td><td>0</td><td>100</td><td>70.0</td></tr>
+          <tr class="win-row"><th scope="row">GPT-6 Astra + ForceHarness</th><td>100</td><td>70</td><td>100</td><td>50</td><td>100</td><td>90</td><td>100</td><td>90</td><td>87.5</td></tr>
+          <tr><th scope="row">GPT-6.1 Sol, no force</th><td>90</td><td>50</td><td>90</td><td>30</td><td>100</td><td>60</td><td>0</td><td>100</td><td>65.0</td></tr>
+          <tr class="win-row"><th scope="row">GPT-6.1 Sol + ForceHarness</th><td>100</td><td>60</td><td>100</td><td>40</td><td>100</td><td>100</td><td>100</td><td>100</td><td>87.5</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="table-note"><sup>*</sup> Best trained row reported in the ForceBench paper, not reproduced by us; 200 demonstrations per task. Success in percent.</p>
+  </div>
+  <div class="bench-block">
+    <h3>HiddenPhys <span>MuJoCo, 7 tasks with a hidden physical variable, 20 test seeds per task</span></h3>
+    <div class="frames frames-7" data-frames="hp"></div>
+    <div class="table-scroll">
+      <table class="num-table">
+        <thead><tr><th scope="col">Method</th><th>Weight</th><th>CoM</th><th>Wipe</th><th>Stack</th><th>Peg</th><th>Latch</th><th>Lock</th><th>Total</th><th>Damaged</th><th>Demos</th></tr></thead>
+        <tbody>
+          <tr class="muted-row"><th scope="row">Expert force controller<sup>&dagger;</sup></th><td>20</td><td>19</td><td>20</td><td>20</td><td>18</td><td>19</td><td>20</td><td>136</td><td>1</td><td>0</td></tr>
+          <tr><th scope="row">Position only<sup>&dagger;</sup></th><td>10</td><td>10</td><td>0</td><td>17</td><td>5</td><td>13</td><td>16</td><td>71</td><td>6</td><td>0</td></tr>
+          <tr><th scope="row">Diffusion Policy</th><td>16</td><td>17</td><td>4</td><td>11</td><td>15</td><td>9</td><td>11</td><td>83</td><td>20</td><td>200</td></tr>
+          <tr><th scope="row">&pi;<sub>0.5</sub></th><td>9</td><td>9</td><td>14</td><td>12</td><td>12</td><td>2</td><td>11</td><td>69</td><td>24</td><td>200</td></tr>
+          <tr><th scope="row">ForceVLA</th><td>11</td><td>10</td><td>12</td><td>12</td><td>15</td><td>2</td><td>8</td><td>70</td><td>29</td><td>200</td></tr>
+          <tr><th scope="row">GPT-6 Astra, no force</th><td>17</td><td>10</td><td>16</td><td>20</td><td>1</td><td>13</td><td>10</td><td>87</td><td>17</td><td>0</td></tr>
+          <tr class="win-row"><th scope="row">GPT-6 Astra + ForceHarness</th><td>20</td><td>20</td><td>20</td><td>20</td><td>15</td><td>20</td><td>20</td><td>135</td><td>0</td><td>0</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="table-note"><sup>&dagger;</sup> Hand-written state machine per task. Damaged counts episodes past a handle's damage
+      threshold. Trained policies with force input and Claude Fable 5.2 are in the paper.</p>
+  </div>
+</section>
+
+<section class="abstract wrap prose">
+  <h2>Abstract</h2>
+  <p>Frontier multimodal models can now control robots zero-shot from images, yet many manipulation tasks depend on
+    contact forces that images cannot show. Bringing force to an API-only frozen model raises two challenges. First,
+    contact evolves much faster than an API model can decide, so the system must close the loop on force beneath the
+    model. Second, a frozen model cannot interpret raw force streams, so force must be returned in a form the model can
+    reason about.</p>
+  <p>Therefore, we present ForceHarness, a harness that lets frozen models use force without demonstrations or
+    finetuning. After calibrating hand force from a wrist sensor or joint torques alone, ForceHarness addresses the first
+    challenge with self-terminating force primitives that regulate force on their own and return at a contact event. To
+    address the second challenge, a physics translation layer turns each force trace into physical quantities with
+    uncertainty as the tool result. To evaluate ForceHarness against expert force controllers and learned policies under
+    identical conditions, we also build HiddenPhys, a seven-task MuJoCo benchmark with hidden physical variables. On a
+    real arm without a wrist force sensor, ForceHarness raises the zero-shot success rate of GPT-6 Astra from 3.3% to
+    90.0%. In simulation, it adds 17.5 percentage points on the public ForceBench suite and 34.3 percentage points on
+    HiddenPhys, surpassing force-aware policies trained on demonstrations on both benchmarks and matching hand-written
+    expert controllers on HiddenPhys. Ablations further show that smaller models make significantly better decisions
+    when given physical quantities rather than raw force values.</p>
+</section>
+
+<section class="results wrap" aria-label="Main results in numbers">
+  <div class="result">
+    <h2>Real robot</h2>
+    <p class="result-sub">6 tasks, 10 trials each, GPT-6 Astra</p>
+    <div class="bars" data-bars='[["No force",3.3,"2/60"],["ForceHarness",90.0,"54/60"]]'></div>
+  </div>
+  <div class="result">
+    <h2>ForceBench</h2>
+    <p class="result-sub">8 tasks in Isaac Lab, RGB only, GPT-6 Astra</p>
+    <div class="bars" data-bars='[["Best trained policy",35.3,"35.3%"],["No force",70.0,"70.0%"],["ForceHarness",87.5,"87.5%"]]'></div>
+  </div>
+  <div class="result">
+    <h2>HiddenPhys</h2>
+    <p class="result-sub">7 tasks in MuJoCo, 20 seeds each, GPT-6 Astra</p>
+    <div class="bars" data-bars='[["Best trained policy",59.3,"83/140"],["No force",62.1,"87/140"],["ForceHarness",96.4,"135/140"]]'></div>
+  </div>
+</section>
+
+<section id="call" class="call wrap-wide">
+  <div class="wrap">
+    <h2>One tool call, start to finish</h2>
+    <p class="section-intro">The model never sees a force stream. It calls a primitive; the primitive regulates contact on
+      its own and stops on an event; the harness returns the physical quantities it measured. Each call below is taken
+      unchanged from a logged real-robot episode, with the force the primitive recorded.</p>
+  </div>
+  <div class="call-shell">
+    <div class="tabs" role="tablist" aria-label="Logged calls"></div>
+    <div class="call-panel" role="tabpanel" aria-live="polite">
+      <figure class="call-photo"><img alt="" src=""><figcaption></figcaption></figure>
+      <ol class="call-steps">
+        <li class="step step-command">
+          <span class="step-label">Model calls</span>
+          <code class="call-code" data-field="call"></code>
+        </li>
+        <li class="step step-force">
+          <span class="step-label">Primitive runs and stops itself</span>
+          <svg class="trace" viewBox="0 0 560 170" role="img" aria-label="Force on the hand during the call"></svg>
+        </li>
+        <li class="step step-force">
+          <span class="step-label">Tool result the model reads</span>
+          <pre class="receipt" data-field="receipt"></pre>
+        </li>
+        <li class="step step-command">
+          <span class="step-label">Next call</span>
+          <code class="call-code" data-field="next"></code>
+          <p class="note"></p>
+        </li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<section id="method" class="method wrap">
+  <h2>How it works</h2>
+  <figure class="fig">
+    <a href="assets/img/fig2_overview.webp"><img src="assets/img/fig2_overview.webp" alt="Overview of ForceHarness: a frozen model calls tools; self-terminating force primitives close the loop on force; a physics translation layer turns force traces into quantities with uncertainty." loading="lazy"></a>
+    <figcaption>Blue is the command path, teal the force path. The same harness drives a real arm and two simulators.</figcaption>
+  </figure>
+  <div class="layers">
+    <div class="layer layer-top">
+      <h3>Physics translation</h3>
+      <p>Fixed estimators turn each primitive's force trace into physical quantities: mass, centre-of-mass offset,
+        friction, contact height, stiffness, insertion advance. Each comes with an uncertainty, a window and flags, and
+        none with a task threshold: the layer says how heavy a load is, never whether that is enough.</p>
+    </div>
+    <div class="layer layer-mid">
+      <h3>Self-terminating force primitives</h3>
+      <p>Twelve contact skills share one loop. A target pose leads the measured pose, so the robot's stock impedance
+        controller turns the lead into force; an admittance law holds a commanded force; the primitive stops on contact,
+        stall, a drop in resistance or its own goal, and holds still while the model thinks.</p>
+    </div>
+    <div class="layer layer-base">
+      <h3>Force sensing and calibration</h3>
+      <p>A wrist sensor gives hand force directly; on an arm without one, the layer solves w = (J<sup>T</sup>)<sup>+</sup>
+        &tau;<sub>ext</sub> from joint torques. Three run-time rules handle slow bias: tare at rest, settle then read,
+        report changes rather than absolute values.</p>
+    </div>
+  </div>
+</section>
+
+<section class="monitor wrap">
+  <h2>Watch an episode</h2>
+  <div class="monitor-row">
+    <p>A web monitor runs alongside every real-robot episode. It shows the wrist force live, next to what the model saw,
+      the tool it called, and the tool result that came back, and keeps each episode for review and comparison.</p>
+    <figure class="fig">
+      <a href="assets/img/monitor_live.webp"><img src="assets/img/monitor_live.webp" alt="Web monitor during a USB insertion: live wrist force, the model's call and the returned tool result." loading="lazy"></a>
+      <figcaption>Monitor during a USB insertion, turn 9, a wiggle in progress. English replay of a recorded episode.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section id="start" class="start wrap">
+  <h2>Get started</h2>
+  <div class="start-agent">
+    <div class="start-agent-text">
+      <h3>Hand it to your coding agent</h3>
+      <p>Paste this into the coding agent you use. The repository ships a setup skill, plain Markdown that any agent can follow: it installs
+        and verifies the simulators, and on a real arm it first checks whether the arm can sense force at all, then
+        calibrates force and brings the robot up in stages that never move it without your confirmation.</p>
+    </div>
+    <div class="bib prompt">
+      <button class="copy" type="button" data-copy="#agent-prompt">Copy</button>
+<pre id="agent-prompt"><code>Set up ForceHarness for me: clone https://github.com/showlab/ForceHarness, read its AGENTS.md, and follow the setup skill in skills/forceharness-setup/SKILL.md gate by gate. My target: the HiddenPhys simulator (or: ForceBench, or: my robot arm, &lt;make, model, controller software&gt;). Report each gate to me, never move the robot without my go-ahead, and ask before any paid API call.</code></pre>
+    </div>
+  </div>
+  <div class="start-grid">
+    <div class="start-item">
+      <h3>Run it in simulation</h3>
+      <p>Install the harness and the HiddenPhys benchmark, check the simulator, then run one episode with a model.</p>
+<pre class="cmd"><code>git clone https://github.com/showlab/ForceHarness
+cd ForceHarness &amp;&amp; pip install -e ".[sim]"
+python scripts/check_sim.py
+python scripts/run_episode.py --task weight_sort \
+  --model gpt-6-astra --paper-defaults --seed 9100</code></pre>
+    </div>
+    <div class="start-item">
+      <h3>Use the demonstrations</h3>
+      <p>1,423 expert episodes on the seven HiddenPhys tasks, with two cameras, proprioception, raw wrist force and the exact
+        controller actions: raw episodes that replay exactly, and a LeRobot dataset for training.</p>
+    </div>
+  </div>
+</section>
+
+<section class="cite wrap">
+  <h2>Citation</h2>
+  <div class="bib">
+    <button class="copy" type="button" data-copy="#bibtex">Copy BibTeX</button>
+<pre id="bibtex"><code>@article{sun2026forceharness,
+  title   = {ForceHarness: Turning Force into Action and Physics
+             for Frozen Frontier Models},
+  author  = {Sun, Ke and Ma, Kevin Yuchen and Zhang, Yike and Chen, Yanzhe
+             and Shou, Mike Zheng},
+  journal = {arXiv preprint},
+  year    = {2026}
+}</code></pre>
+  </div>
+</section>
+
+</main>
+
+<footer class="foot wrap">
+  <p>ForceHarness &middot; Show Lab, National University of Singapore. Code released under the MIT license.</p>
+</footer>
+
+<script src="assets/js/site.js?v=20261116a" defer></script>
+</body>
+</html>

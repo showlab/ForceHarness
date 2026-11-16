@@ -1,0 +1,386 @@
+{
+  "generated": "2026-11-13",
+  "encoding": "H.264 High, yuv420p, BT.709 SDR, 30 fps, CRF 27 (teaser CRF 23), preset slow, no audio, faststart, container/stream metadata stripped; 2026-11-16: the robot base's serial label and QR code (and, in blackboard_wipe_noforce, a handwritten label on the PC under the table) are blurred, and the affected clips, the teaser and the film were re-encoded (CRF 25 clips, 23 teaser, 26 film) together with their posters",
+  "note_orientation": "Phone sources are portrait (1080x1920); clips are kept portrait at 720x1280 instead of 1280x720 to avoid cropping away the arm.",
+  "clips": [
+    {
+      "file": "blackboard_wipe_forceharness.mp4",
+      "poster": "blackboard_wipe_forceharness.jpg",
+      "task": "blackboard_wipe",
+      "task_label": "Wipe a whiteboard",
+      "condition": "A",
+      "condition_label": "ForceHarness",
+      "source_camera": "iPhone 17, portrait, HLG HDR converted to SDR BT.709",
+      "source_creation_time": "2026-11-07T01:00:55+0800",
+      "source_creation_time_field": "com.apple.quicktime.creationdate (capture start, UTC+8)",
+      "matched_episode": "20261107-010039_blackboard_wipe_live",
+      "outcome": "success",
+      "outcome_source": "operator label success; the model's own final check still reported faint residue (done success=false)",
+      "speed": 64,
+      "source_window_s": [
+        0.0,
+        1640.0
+      ],
+      "trim_s": {
+        "head": 0.0,
+        "tail": 1379.685
+      },
+      "duration_s": 25.633,
+      "size_bytes": 1504173,
+      "width": 720,
+      "height": 1280,
+      "notes": "Whole episode: phone started 15 s after episode start (before first robot motion). Tail cut at episode end; the rest of the file is a follow-up episode 20261107-012905 on the same board and a person resetting the board."
+    },
+    {
+      "file": "blackboard_wipe_noforce.mp4",
+      "poster": "blackboard_wipe_noforce.jpg",
+      "task": "blackboard_wipe",
+      "task_label": "Wipe a whiteboard",
+      "condition": "B",
+      "condition_label": "No-force control",
+      "source_camera": "iPhone 17, portrait, HLG HDR converted to SDR BT.709",
+      "source_creation_time": "2026-11-06T19:48:43+0800",
+      "source_creation_time_field": "com.apple.quicktime.creationdate (capture start, UTC+8)",
+      "matched_episode": "20261106-194841_blackboard_wipe_live",
+      "outcome": "failure",
+      "outcome_source": "operator label failure; model reported writing still visible (done success=false)",
+      "speed": 32,
+      "source_window_s": [
+        7.0,
+        738.155
+      ],
+      "trim_s": {
+        "head": 7.0,
+        "tail": 0.0
+      },
+      "duration_s": 22.9,
+      "size_bytes": 1691975,
+      "width": 720,
+      "height": 1280,
+      "notes": "PARTIAL episode: the phone stopped 738 s into a 1267 s episode (first ~58%). Head trim = idle seconds before the robot moved, removes a passer-by."
+    },
+    {
+      "file": "screw_insert_forceharness.mp4",
+      "poster": "screw_insert_forceharness.jpg",
+      "task": "screw_insert",
+      "task_label": "Drive a screw",
+      "condition": "A",
+      "condition_label": "ForceHarness",
+      "source_camera": "iPhone 17, portrait, HLG HDR converted to SDR BT.709",
+      "source_creation_time": "2026-11-05T20:06:08+0800",
+      "source_creation_time_field": "com.apple.quicktime.creationdate (capture start, UTC+8); file is an H.264 re-export, container creation_time 2026-11-06T12:36:47.000000Z is the export time",
+      "matched_episode": "20261105-200607_screw_insert_live",
+      "outcome": "success",
+      "outcome_source": "operator label success; screw engaged (2.5 mm sink while turning), model released it, operator then stopped the run",
+      "speed": 16,
+      "source_window_s": [
+        0.0,
+        325.0
+      ],
+      "trim_s": {
+        "head": 0.0,
+        "tail": 129.473
+      },
+      "duration_s": 20.3,
+      "size_bytes": 1247880,
+      "width": 720,
+      "height": 1280,
+      "notes": "Whole episode. Tail cut = idle footage after the operator stop."
+    },
+    {
+      "file": "screw_insert_noforce.mp4",
+      "poster": "screw_insert_noforce.jpg",
+      "task": "screw_insert",
+      "task_label": "Drive a screw",
+      "condition": "B",
+      "condition_label": "No-force control",
+      "source_camera": "iPhone 17, portrait, HLG HDR converted to SDR BT.709",
+      "source_creation_time": "2026-11-05T19:51:39+0800",
+      "source_creation_time_field": "com.apple.quicktime.creationdate (capture start, UTC+8); file is an H.264 re-export, container creation_time 2026-11-06T12:35:35.000000Z is the export time",
+      "matched_episode": "20261105-195131_screw_insert_live",
+      "outcome": "failure",
+      "outcome_source": "operator label failure; model reported no thread engagement after ~176 deg (done success=false)",
+      "speed": 16,
+      "source_window_s": [
+        0.0,
+        361.0
+      ],
+      "trim_s": {
+        "head": 0.0,
+        "tail": 24.077
+      },
+      "duration_s": 22.567,
+      "size_bytes": 1294028,
+      "width": 720,
+      "height": 1280,
+      "notes": "Whole episode. Tail cut at episode end: afterwards the gripper opened during operator takeover and the screw tipped over (not part of the episode)."
+    },
+    {
+      "file": "peel_vegetable_forceharness.mp4",
+      "poster": "peel_vegetable_forceharness.jpg",
+      "task": "peel_vegetable",
+      "task_label": "Peel an eggplant",
+      "condition": "A",
+      "condition_label": "ForceHarness",
+      "source_camera": "iPhone 17, portrait, HLG HDR converted to SDR BT.709",
+      "source_creation_time": "2026-11-07T04:22:45+0800",
+      "source_creation_time_field": "com.apple.quicktime.creationdate (capture start, UTC+8)",
+      "matched_episode": "20261107-042238_peel_vegetable_live",
+      "outcome": "success",
+      "outcome_source": "operator label success; run stopped by operator",
+      "speed": 8,
+      "source_window_s": [
+        0.0,
+        187.152
+      ],
+      "trim_s": {
+        "head": 0.0,
+        "tail": 0.0
+      },
+      "duration_s": 23.4,
+      "size_bytes": 2325924,
+      "width": 720,
+      "height": 1280,
+      "notes": "Phone started ~7 s after episode start (before first motion) and stopped ~15 s before the logged end. Handheld camera: close-up at ~10-12 s and top-down view of the peeled strip in the last ~1.5 s of the clip."
+    },
+    {
+      "file": "peel_vegetable_noforce.mp4",
+      "poster": "peel_vegetable_noforce.jpg",
+      "task": "peel_vegetable",
+      "task_label": "Peel an eggplant",
+      "condition": "B",
+      "condition_label": "No-force control",
+      "source_camera": "iPhone 17, portrait, HLG HDR converted to SDR BT.709",
+      "source_creation_time": "2026-11-07T04:34:50+0800",
+      "source_creation_time_field": "com.apple.quicktime.creationdate (capture start, UTC+8)",
+      "matched_episode": "20261107-043451_peel_vegetable_live",
+      "outcome": "failure",
+      "outcome_source": "operator label failure; model ended the run without a usable peel (done success=false)",
+      "speed": 8,
+      "source_window_s": [
+        0.0,
+        135.953
+      ],
+      "trim_s": {
+        "head": 0.0,
+        "tail": 0.0
+      },
+      "duration_s": 17.0,
+      "size_bytes": 1380066,
+      "width": 720,
+      "height": 1280,
+      "notes": "Whole episode; last ~1 s of the clip (~8 s real time) is a handheld top-down view of the result after the episode ended, robot static."
+    },
+    {
+      "file": "usb_insert_forceharness.mp4",
+      "poster": "usb_insert_forceharness.jpg",
+      "task": "usb_insert",
+      "task_label": "Insert a USB plug",
+      "condition": "A",
+      "condition_label": "ForceHarness",
+      "source_camera": "iPhone 17, portrait, HLG HDR converted to SDR BT.709",
+      "source_creation_time": "2026-11-07T20:54:37+0800",
+      "source_creation_time_field": "com.apple.quicktime.creationdate (capture start, UTC+8)",
+      "matched_episode": "20261107-205426_usb_insert_live",
+      "outcome": "success",
+      "outcome_source": "operator label success; wiggle returned \"seated\", run stopped by operator",
+      "speed": 12,
+      "source_window_s": [
+        0.0,
+        235.0
+      ],
+      "trim_s": {
+        "head": 0.0,
+        "tail": 6.067
+      },
+      "duration_s": 19.6,
+      "size_bytes": 1347425,
+      "width": 720,
+      "height": 1280,
+      "notes": "Whole episode (phone started 11 s after episode start, before first motion). Handheld camera moves to a close-up at ~7.7 s. Tail cut = idle."
+    },
+    {
+      "file": "usb_insert_noforce.mp4",
+      "poster": "usb_insert_noforce.jpg",
+      "task": "usb_insert",
+      "task_label": "Insert a USB plug",
+      "condition": "B",
+      "condition_label": "No-force control",
+      "source_camera": "iPhone 17, portrait, HLG HDR converted to SDR BT.709",
+      "source_creation_time": "2026-11-07T21:25:04+0800",
+      "source_creation_time_field": "com.apple.quicktime.creationdate (capture start, UTC+8)",
+      "matched_episode": "20261107-212434_usb_insert_live",
+      "outcome": "failure",
+      "outcome_source": "operator label failure; model released the plug without confirming it was seated, run stopped by operator",
+      "speed": 24,
+      "source_window_s": [
+        0.0,
+        594.0
+      ],
+      "trim_s": {
+        "head": 0.0,
+        "tail": 87.392
+      },
+      "duration_s": 24.766,
+      "size_bytes": 1345506,
+      "width": 720,
+      "height": 1280,
+      "notes": "Phone started ~29 s after episode start (model was still planning). Tail cut at episode end (camera moved away afterwards). Handheld camera."
+    },
+    {
+      "file": "can_weight_sort_forceharness.mp4",
+      "poster": "can_weight_sort_forceharness.jpg",
+      "task": "can_weight_sort",
+      "task_label": "Sort bottles by weight",
+      "condition": "A",
+      "condition_label": "ForceHarness",
+      "source_camera": "iPhone 17, portrait, HLG HDR converted to SDR BT.709",
+      "source_creation_time": "2026-11-08T00:19:43+0800",
+      "source_creation_time_field": "com.apple.quicktime.creationdate (capture start, UTC+8)",
+      "matched_episode": "20261108-001912_can_weight_sort_live",
+      "outcome": "success",
+      "outcome_source": "operator label success; model reported success (done success=true)",
+      "speed": 64,
+      "source_window_s": [
+        7.5,
+        1782.0
+      ],
+      "trim_s": {
+        "head": 7.5,
+        "tail": 3.725
+      },
+      "duration_s": 27.733,
+      "size_bytes": 1719214,
+      "width": 720,
+      "height": 1280,
+      "notes": "Phone started ~30 s after episode start, so the first approach move (~15 s) is not recorded. Head trim = 7.5 s of idle robot, removes a passer-by. 64x is the largest allowed factor, so the clip is 27.7 s."
+    },
+    {
+      "file": "touch_firmness_noforce.mp4",
+      "poster": "touch_firmness_noforce.jpg",
+      "task": "touch_firmness",
+      "task_label": "Tell soft from hard",
+      "condition": "B",
+      "condition_label": "No-force control",
+      "source_camera": "iPhone 17, portrait, HLG HDR converted to SDR BT.709",
+      "source_creation_time": "2026-11-07T06:27:28+0800",
+      "source_creation_time_field": "com.apple.quicktime.creationdate (capture start, UTC+8)",
+      "matched_episode": "20261107-062725_touch_firmness_live",
+      "outcome": "failure",
+      "outcome_source": "operator label failure; model answered \"cannot tell\" (done success=false)",
+      "speed": 16,
+      "source_window_s": [
+        0.0,
+        370.0
+      ],
+      "trim_s": {
+        "head": 0.0,
+        "tail": 6.81
+      },
+      "duration_s": 23.133,
+      "size_bytes": 1073711,
+      "width": 720,
+      "height": 1280,
+      "notes": "Whole episode. Tail cut = idle."
+    },
+    {
+      "file": "touch_firmness_forceharness_d435.mp4",
+      "poster": "touch_firmness_forceharness_d435.jpg",
+      "task": "touch_firmness",
+      "task_label": "Tell soft from hard",
+      "condition": "A",
+      "condition_label": "ForceHarness",
+      "source_camera": "front RealSense D435 monitor recording (not phone)",
+      "source_creation_time": "2026-11-07T06:20:36.660+08:00",
+      "source_creation_time_field": "monitor recording first_frame_at (UTC+8)",
+      "matched_episode": "20261107-062035_touch_firmness_live",
+      "outcome": "success",
+      "outcome_source": "operator label success; model answered \"left hard, right soft\" (done success=true)",
+      "speed": 16,
+      "source_window_s": [
+        0.0,
+        341.933
+      ],
+      "trim_s": {
+        "head": 0.0,
+        "tail": 0.0
+      },
+      "duration_s": 21.367,
+      "size_bytes": 1506799,
+      "width": 1280,
+      "height": 720,
+      "notes": "SUBSTITUTE SOURCE: no phone recording of a condition-A touch_firmness run exists; this is the fixed front RealSense D435 monitor recording (1280x720, 15 fps, landscape) of the A run just before the phone-recorded B run. Whole episode."
+    }
+  ],
+  "teaser": {
+    "file": "teaser.mp4",
+    "poster": "teaser.jpg",
+    "layout": "3x2 grid of 640x360 tiles (1920x720), all ForceHarness (condition A)",
+    "duration_s": 11.2,
+    "size_bytes": 1810722,
+    "crf": 23,
+    "tiles": [
+      {
+        "task_label": "Wipe a whiteboard",
+        "clip": "blackboard_wipe_forceharness.mp4",
+        "speed": 64,
+        "clip_window_s": [
+          0.0,
+          11.2
+        ],
+        "crop_on_720x1280_or_1280x720": "720:405:0:680"
+      },
+      {
+        "task_label": "Drive a screw",
+        "clip": "screw_insert_forceharness.mp4",
+        "speed": 16,
+        "clip_window_s": [
+          9.1,
+          20.3
+        ],
+        "crop_on_720x1280_or_1280x720": "720:405:0:480"
+      },
+      {
+        "task_label": "Peel an eggplant",
+        "clip": "peel_vegetable_forceharness.mp4",
+        "speed": 8,
+        "clip_window_s": [
+          10.6,
+          21.8
+        ],
+        "crop_on_720x1280_or_1280x720": "720:405:0:540"
+      },
+      {
+        "task_label": "Insert a USB plug",
+        "clip": "usb_insert_forceharness.mp4",
+        "speed": 12,
+        "clip_window_s": [
+          8.4,
+          19.6
+        ],
+        "crop_on_720x1280_or_1280x720": "720:405:0:470"
+      },
+      {
+        "task_label": "Sort bottles by weight",
+        "clip": "can_weight_sort_forceharness.mp4",
+        "speed": 64,
+        "clip_window_s": [
+          16.533,
+          27.733
+        ],
+        "crop_on_720x1280_or_1280x720": "720:405:0:560"
+      },
+      {
+        "task_label": "Tell soft from hard",
+        "clip": "touch_firmness_forceharness_d435.mp4",
+        "speed": 16,
+        "clip_window_s": [
+          8.6,
+          19.8
+        ],
+        "crop_on_720x1280_or_1280x720": "800:450:240:80"
+      }
+    ],
+    "notes": "Loop length 11.2 s (not 12): the USB tile only has 11.2 s of stable close-up. Portrait tiles are 16:9 crops (720x405 band) of the portrait clips; the \"Tell soft from hard\" tile uses the D435 substitute clip."
+  }
+}
