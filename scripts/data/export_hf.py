@@ -13,9 +13,11 @@ Output (``--out``), one Hugging Face dataset repository:
 
     python scripts/data/export_hf.py --demos /path/to/demos --out hf_export            # raw part only (numpy is enough)
     python scripts/data/export_hf.py --demos /path/to/demos --out hf_export --lerobot  # + LeRobot part (needs `lerobot`)
+    python scripts/data/export_hf.py --out hf_export --card-only --arxiv-id 2611.xxxxx --repo-id <org>/<name>  # refresh README.md
     python scripts/data/export_hf.py --out hf_export --push --repo-id <org>/<name>    # upload a finished export
 
-Nothing is uploaded unless ``--push`` and ``--repo-id`` are both given.  The metadata of every episode is rewritten to a
+Nothing is uploaded unless ``--push`` and ``--repo-id`` are both given, and ``--push`` refuses while the card still has the
+``ARXIV_ID`` placeholder (the arXiv link in the card is what links the dataset to the paper page on the Hub).  The metadata of every episode is rewritten to a
 cleaned record, and the export stops if any released string still looks like a local path or contains CJK text.
 """
 from __future__ import annotations
@@ -118,12 +120,18 @@ def export_raw(demos: Path, out: Path, tasks: List[str], n_per_task: int | None)
     return counts
 
 
-def write_card(out: Path, counts: Dict[str, Dict[str, int]]) -> None:
+def write_card(out: Path, counts: Dict[str, Dict[str, int]], arxiv_id: str | None = None, repo_id: str | None = None) -> None:
     rows = "\n".join(f"| `{t}` | {c['released']} | {c['attempted']} | {c['frames']:,} | {c['bytes'] / 1e9:.2f} GB |"
                      for t, c in counts.items())
     tot = {k: sum(c[k] for c in counts.values()) for k in ("released", "attempted", "frames", "bytes")}
     rows += f"\n| **total** | **{tot['released']}** | {tot['attempted']} | {tot['frames']:,} | {tot['bytes'] / 1e9:.2f} GB |"
     text = CARD.read_text(encoding="utf-8").replace("<!-- COUNTS_TABLE -->", rows)
+    if arxiv_id:
+        if not re.fullmatch(r"\d{4}\.\d{4,5}", arxiv_id):
+            sys.exit(f"--arxiv-id should look like 2611.01234, got {arxiv_id!r}")
+        text = text.replace("ARXIV_ID", arxiv_id)
+    if repo_id:
+        text = text.replace("<this repository id>", repo_id)
     (out / "README.md").write_text(text, encoding="utf-8")
 
 
@@ -160,6 +168,9 @@ def build_lerobot(out: Path) -> None:
 def push(out: Path, repo_id: str, private: bool) -> None:
     from huggingface_hub import HfApi
 
+    card = (out / "README.md").read_text(encoding="utf-8")
+    if "ARXIV_ID" in card or "<this repository id>" in card:
+        sys.exit("README.md still has placeholders; rerun with --card-only --arxiv-id <id> --repo-id <org>/<name> first")
     api = HfApi()
     api.create_repo(repo_id, repo_type="dataset", private=private, exist_ok=True)
     api.upload_large_folder(repo_id=repo_id, repo_type="dataset", folder_path=str(out))
@@ -173,6 +184,8 @@ def main() -> int:
     ap.add_argument("--tasks", nargs="+", default=HIDDENPHYS_TASKS)
     ap.add_argument("--n-per-task", type=int, default=None, help="release at most this many episodes per task (lowest seeds)")
     ap.add_argument("--lerobot", action="store_true", help="also build the LeRobot v2.1 part (requires the lerobot package)")
+    ap.add_argument("--card-only", action="store_true", help="rewrite README.md of an existing export (counts from raw/attempts.json)")
+    ap.add_argument("--arxiv-id", help="fills the paper link and citation in the card, e.g. 2611.01234")
     ap.add_argument("--push", action="store_true", help="upload --out to the Hugging Face Hub (needs --repo-id and a login)")
     ap.add_argument("--repo-id")
     ap.add_argument("--public", action="store_true", help="create the Hub repository as public (default: private)")
@@ -181,9 +194,13 @@ def main() -> int:
         if (args.out / "raw").exists():
             sys.exit(f"{args.out}/raw exists; choose a new --out")
         counts = export_raw(args.demos, args.out, args.tasks, args.n_per_task)
-        write_card(args.out, counts)
+        write_card(args.out, counts, args.arxiv_id, args.repo_id)
         if args.lerobot:
             build_lerobot(args.out)
+    if args.card_only:
+        counts = json.loads((args.out / "raw" / "attempts.json").read_text(encoding="utf-8"))
+        write_card(args.out, counts, args.arxiv_id, args.repo_id)
+        print(f"[card] {args.out}/README.md rewritten", flush=True)
     if args.push:
         if not args.repo_id:
             sys.exit("--push needs --repo-id")

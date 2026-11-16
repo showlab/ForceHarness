@@ -22,6 +22,8 @@ configs:
 
 # HiddenPhys expert demonstrations
 
+[Paper](https://arxiv.org/abs/ARXIV_ID) · [Project page](https://showlab.github.io/ForceHarness) · [Code](https://github.com/showlab/ForceHarness)
+
 Expert demonstrations for the seven tasks of **HiddenPhys**, the MuJoCo benchmark released with
 *ForceHarness: Turning Force into Action and Physics for Frozen Frontier Models*.
 Each HiddenPhys task hides one physical variable that decides success (a mass, a centre of mass, a table height, a hole
@@ -127,4 +129,13 @@ it for every method) and uses the soft arm (stiffness 150). Episode budgets foll
 
 ## License and citation
 
-MIT. The simulated scenes are built from robosuite (MIT) assets. Citation: to be added with the paper.
+MIT. The simulated scenes are built from robosuite (MIT) assets. If you use this dataset, please cite the paper:
+
+```bibtex
+@article{sun2026forceharness,
+  title   = {ForceHarness: Turning Force into Action and Physics for Frozen Frontier Models},
+  author  = {Sun, Ke and Ma, Kevin Yuchen and Zhang, Yike and Chen, Yanzhe and Shou, Mike Zheng},
+  journal = {arXiv preprint arXiv:ARXIV_ID},
+  year    = {2026}
+}
+```
