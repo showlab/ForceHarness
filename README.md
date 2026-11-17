@@ -1,6 +1,9 @@
 <div align="center">
 
-<img src="assets/logo.svg" alt="ForceHarness" width="460">
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="assets/logo-dark.svg">
+  <img src="assets/logo.svg" alt="ForceHarness" width="460">
+</picture>
 
 ### Turning Force into Action and Physics for Frozen Frontier Models
 
