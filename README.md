@@ -1,21 +1,35 @@
-<p align="center">
-  <img src="assets/banner.png" alt="ForceHarness: Turning Force into Action and Physics for Frozen Frontier Models" width="720">
-</p>
+<div align="center">
+
+<img src="assets/banner.png" alt="ForceHarness: Turning Force into Action and Physics for Frozen Frontier Models" width="720">
 
 <p align="center">
-  <a href="https://showlab.github.io/ForceHarness"><img alt="Project page" src="https://img.shields.io/badge/Project-Page-1f7f74?style=for-the-badge"></a>
-  <a href="https://arxiv.org/abs/2611.21099"><img alt="arXiv 2611.21099" src="https://img.shields.io/badge/arXiv-2611.21099-b31b1b?style=for-the-badge"></a>
-  <a href="skills/forceharness-setup/SKILL.md"><img alt="Agent skill" src="https://img.shields.io/badge/Agent-Skill-24406e?style=for-the-badge"></a>
-  <a href="LICENSE"><img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-6b7280?style=for-the-badge"></a>
+Ke Sun ·
+<a href="https://kevinskwk.github.io/">Kevin Yuchen Ma</a> ·
+Yike Zhang ·
+<a href="https://chenanno.github.io/">Yanzhe Chen</a> ·
+<a href="https://sites.google.com/view/showlab">Mike Zheng Shou</a><sup>&dagger;</sup>
 </p>
 
+<p align="center"><sup>&dagger;</sup> corresponding author</p>
+
+**Show Lab @ National University of Singapore**
+
 <p align="center">
-  Ke Sun &nbsp;·&nbsp; Kevin Yuchen Ma &nbsp;·&nbsp; Yike Zhang &nbsp;·&nbsp; Yanzhe Chen &nbsp;·&nbsp; Mike Zheng Shou<sup>†</sup>
-  <br>
-  Show Lab, National University of Singapore
-  <br>
-  <sub><sup>†</sup>Corresponding author</sub>
+📄 <a href="https://arxiv.org/abs/2611.21099">arXiv Paper</a> &nbsp;|&nbsp;
+🌐 <a href="https://showlab.github.io/ForceHarness/">Project Page</a> &nbsp;|&nbsp;
+🎬 <a href="https://showlab.github.io/ForceHarness/#film">Video</a> &nbsp;|&nbsp;
+🤖 <a href="skills/forceharness-setup/SKILL.md">Agent Skill</a>
 </p>
+
+</div>
+
+<p align="center">
+  <a href="https://showlab.github.io/ForceHarness/#film"><img src="assets/film_poster.jpg" alt="ForceHarness project film (4:43); click to watch it on the project page" width="100%"></a>
+</p>
+<p align="center"><sub>
+  ▶ The project film (4:43, with narration); click to watch it on the project page. Its numbers are the paper's, so its
+  ForceBench figure is on the development seeds; see Results for the held-out test.
+</sub></p>
 
 <p align="center">
   <img src="assets/teaser.jpg" alt="ForceHarness overview: the frozen model issues tool calls, the harness runs self-terminating force primitives and returns physical quantities; four real-robot tasks; success rates on the real robot, ForceBench and HiddenPhys" width="100%">
