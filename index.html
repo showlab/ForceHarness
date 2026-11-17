@@ -48,7 +48,7 @@
     <p class="authors">Ke Sun, Kevin Yuchen Ma, Yike Zhang, Yanzhe Chen, Mike Zheng Shou<sup>&dagger;</sup></p>
     <p class="affil">Show Lab, National University of Singapore <span aria-hidden="true">&middot;</span> <sup>&dagger;</sup>Corresponding author</p>
     <ul class="links" aria-label="Resources">
-      <li><span class="btn is-soon" aria-disabled="true">Paper<small>arXiv soon</small></span></li>
+      <li><a class="btn" href="https://arxiv.org/abs/2611.21099">Paper</a></li>
       <li><a class="btn" href="https://github.com/showlab/ForceHarness">Code</a></li>
       <li><span class="btn is-soon" aria-disabled="true">Dataset<small>soon</small></span></li>
       <li><a class="btn" href="#real">Robot videos</a></li>
@@ -104,14 +104,19 @@
         <thead><tr><th scope="col">Method</th><th>Weight</th><th>CoM</th><th>Faucet</th><th>Faucet dir.</th><th>Stove</th><th>Stove press</th><th>Drawer</th><th>Nut</th><th>Mean</th></tr></thead>
         <tbody>
           <tr class="muted-row"><th scope="row">&pi;<sub>0.5</sub> + Prompt Fusion, trained<sup>*</sup></th><td>88.0</td><td>56.5</td><td>21.0</td><td>41.5</td><td>16.0</td><td>2.5</td><td>23.0</td><td>34.0</td><td>35.3</td></tr>
-          <tr><th scope="row">GPT-6 Astra, no force</th><td>80</td><td>50</td><td>100</td><td>50</td><td>100</td><td>80</td><td>0</td><td>100</td><td>70.0</td></tr>
-          <tr class="win-row"><th scope="row">GPT-6 Astra + ForceHarness</th><td>100</td><td>70</td><td>100</td><td>50</td><td>100</td><td>90</td><td>100</td><td>90</td><td>87.5</td></tr>
-          <tr><th scope="row">GPT-6.1 Sol, no force</th><td>90</td><td>50</td><td>90</td><td>30</td><td>100</td><td>60</td><td>0</td><td>100</td><td>65.0</td></tr>
-          <tr class="win-row"><th scope="row">GPT-6.1 Sol + ForceHarness</th><td>100</td><td>60</td><td>100</td><td>40</td><td>100</td><td>100</td><td>100</td><td>100</td><td>87.5</td></tr>
+          <tr><th scope="row">GPT-6 Astra, no force<sup>&dagger;</sup></th><td>60</td><td>50</td><td>100</td><td>40</td><td>100</td><td>60</td><td>0</td><td>90</td><td>62.5</td></tr>
+          <tr class="win-row"><th scope="row">GPT-6 Astra + ForceHarness<sup>&dagger;</sup></th><td>100</td><td>60</td><td>100</td><td>20</td><td>100</td><td>100</td><td>100</td><td>80</td><td>82.5</td></tr>
+          <tr class="muted-row"><th scope="row">GPT-6 Astra, no force<sup>&Dagger;</sup></th><td>80</td><td>50</td><td>100</td><td>50</td><td>100</td><td>80</td><td>0</td><td>100</td><td>70.0</td></tr>
+          <tr class="muted-row"><th scope="row">GPT-6 Astra + ForceHarness<sup>&Dagger;</sup></th><td>100</td><td>70</td><td>100</td><td>50</td><td>100</td><td>90</td><td>100</td><td>90</td><td>87.5</td></tr>
+          <tr class="muted-row"><th scope="row">GPT-6.1 Sol, no force<sup>&Dagger;</sup></th><td>90</td><td>50</td><td>90</td><td>30</td><td>100</td><td>60</td><td>0</td><td>100</td><td>65.0</td></tr>
+          <tr class="muted-row"><th scope="row">GPT-6.1 Sol + ForceHarness<sup>&Dagger;</sup></th><td>100</td><td>60</td><td>100</td><td>40</td><td>100</td><td>100</td><td>100</td><td>100</td><td>87.5</td></tr>
         </tbody>
       </table>
     </div>
-    <p class="table-note"><sup>*</sup> Best trained row reported in the ForceBench paper, not reproduced by us; 200 demonstrations per task. Success in percent.</p>
+    <p class="table-note"><sup>*</sup> Best trained row reported in the ForceBench paper, not reproduced by us; 200 demonstrations per task.
+      <sup>&dagger;</sup> Held-out seeds 320&ndash;329, which no run had used before, with the released code unchanged.
+      <sup>&Dagger;</sup> Seeds 300&ndash;309 as in the paper; these were also used while developing the ForceBench tools and task details, so they are not held out.
+      <a href="https://github.com/showlab/ForceHarness/blob/main/docs/forcebench.md#development-and-test-seeds">Details</a>. Success in percent.</p>
   </div>
   <div class="bench-block">
     <h3>HiddenPhys <span>MuJoCo, 7 tasks with a hidden physical variable, 20 test seeds per task</span></h3>
@@ -163,8 +168,8 @@
   </div>
   <div class="result">
     <h2>ForceBench</h2>
-    <p class="result-sub">8 tasks in Isaac Lab, RGB only, GPT-6 Astra</p>
-    <div class="bars" data-bars='[["Best trained policy",35.3,"35.3%"],["No force",70.0,"70.0%"],["ForceHarness",87.5,"87.5%"]]'></div>
+    <p class="result-sub">8 tasks in Isaac Lab, RGB only, GPT-6 Astra, held-out seeds</p>
+    <div class="bars" data-bars='[["Best trained policy",35.3,"35.3%"],["No force",62.5,"50/80"],["ForceHarness",82.5,"66/80"]]'></div>
   </div>
   <div class="result">
     <h2>HiddenPhys</h2>
@@ -254,7 +259,7 @@ python scripts/run_episode.py --task weight_sort \
              for Frozen Frontier Models},
   author  = {Sun, Ke and Ma, Kevin Yuchen and Zhang, Yike and Chen, Yanzhe
              and Shou, Mike Zheng},
-  journal = {arXiv preprint},
+  journal = {arXiv preprint arXiv:2611.21099},
   year    = {2026}
 }</code></pre>
   </div>
