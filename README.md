@@ -73,20 +73,7 @@ All models are used zero-shot: no demonstrations, no finetuning.
 
 ## Results
 
-<table>
-  <tr>
-    <th align="center" width="33%">Real Franka FR3</th>
-    <th align="center" width="33%">ForceBench</th>
-    <th align="center" width="33%">HiddenPhys</th>
-  </tr>
-  <tr>
-    <td align="center"><h3>3.3% → 90.0%</h3><sub>6 tasks × 10 trials</sub></td>
-    <td align="center"><h3>62.5% → 82.5%</h3><sub>8 tasks × 10 held-out seeds, RGB only</sub></td>
-    <td align="center"><h3>62.1% → 96.4%</h3><sub>7 tasks × 20 seeds</sub></td>
-  </tr>
-</table>
-
-Success rate of GPT-6 Astra without force (the no-force control) → with ForceHarness. In detail:
+Success with ForceHarness and without force (the no-force control: no force tools, values or guidance):
 
 | Setting | Model | ForceHarness | No force | Reference |
 |:--|:--|:-:|:-:|:--|
