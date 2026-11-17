@@ -25,12 +25,14 @@ Yike Zhang ·
 
 </div>
 
-<p align="center">
-  <a href="https://showlab.github.io/ForceHarness/#film"><img src="assets/film_poster.jpg" alt="ForceHarness project film (4:43); click to watch it on the project page" width="100%"></a>
-</p>
+<!-- A bare user-attachments URL on its own line is the only form GitHub renders as a video player. The same film, in full
+     quality, is on the project page. -->
+
+https://github.com/user-attachments/assets/c5fee6e4-a733-4fa8-81d2-d80aff92d69f
+
 <p align="center"><sub>
-  ▶ The project film (4:43, with narration); click to watch it on the project page. Its numbers are the paper's, so its
-  ForceBench figure is on the development seeds; see Results for the held-out test.
+  The project film (4:43, with narration). Its numbers are the paper's, so its ForceBench figure is on the development
+  seeds; see Results for the held-out test.
 </sub></p>
 
 <p align="center">
