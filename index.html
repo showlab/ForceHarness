@@ -19,7 +19,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/site.css?v=20261116b">
+<link rel="stylesheet" href="assets/css/site.css?v=20261118a">
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
@@ -50,7 +50,7 @@
     <ul class="links" aria-label="Resources">
       <li><a class="btn" href="https://arxiv.org/abs/2611.21099">Paper</a></li>
       <li><a class="btn" href="https://github.com/showlab/ForceHarness">Code</a></li>
-      <li><span class="btn is-soon" aria-disabled="true">Dataset<small>soon</small></span></li>
+      <li><a class="btn" href="https://huggingface.co/datasets/Jack97/ForceHarness-Data">Dataset</a></li>
       <li><a class="btn" href="#real">Robot videos</a></li>
     </ul>
   </div>
@@ -62,22 +62,19 @@
   </figure>
 </section>
 
-<section id="real" class="real">
-  <div class="wrap">
-    <h2>Six tasks on a real arm</h2>
-    <p class="section-intro">A Franka FR3 with joint torque sensors but no wrist force sensor, run zero-shot by GPT-6 Astra.
-      Each clip is one whole autonomous episode, sped up as marked; switch a tile to see the no-force control, which keeps
-      the same harness and safety limits but removes force tools, force values and force guidance.</p>
-  </div>
-  <figure class="teaser wrap-wide">
+<section id="real" class="real wrap">
+  <h2>Six tasks on a real arm</h2>
+  <p class="section-intro">A Franka FR3 with joint torque sensors but no wrist force sensor, run zero-shot by GPT-6 Astra.
+    Each clip is one whole autonomous episode, sped up as marked; switch a tile to see the no-force control, which keeps
+    the same harness and safety limits but removes force tools, force values and force guidance.</p>
+  <figure class="teaser">
     <video id="teaser" autoplay muted loop playsinline preload="metadata" poster="assets/video/teaser.jpg">
       <source src="assets/video/teaser.mp4" type="video/mp4">
     </video>
     <figcaption>All six tasks with ForceHarness, each tile marked with its playback speed. Below, every episode in full
       next to its no-force control.</figcaption>
   </figure>
-  <div class="clip-grid wrap-wide" data-clips></div>
-  <div class="wrap">
+  <div class="clip-grid" data-clips></div>
   <p class="table-lead">Successes out of 10 episodes per condition; for GPT-6 Astra every task differs at p &lt; 0.01
     (Fisher's exact test).</p>
   <div class="table-scroll">
@@ -88,7 +85,6 @@
       <tbody></tbody>
       <tfoot><tr><th scope="row">Total</th><td>2/60</td><td class="win">54/60</td><td>47/60</td></tr></tfoot>
     </table>
-  </div>
   </div>
 </section>
 
@@ -208,14 +204,12 @@
 
 <section class="monitor wrap">
   <h2>Watch an episode</h2>
-  <div class="monitor-row">
-    <p>A web monitor runs alongside every real-robot episode. It shows the wrist force live, next to what the model saw,
-      the tool it called, and the tool result that came back, and keeps each episode for review and comparison.</p>
-    <figure class="fig">
-      <a href="assets/img/monitor_live.webp"><img src="assets/img/monitor_live.webp" alt="Web monitor during a USB insertion: live wrist force, the model's call and the returned tool result." loading="lazy"></a>
-      <figcaption>Monitor during a USB insertion, turn 9, a wiggle in progress. English replay of a recorded episode.</figcaption>
-    </figure>
-  </div>
+  <p class="section-intro">A web monitor runs alongside every real-robot episode. It shows the wrist force live, next to what the model saw,
+    the tool it called, and the tool result that came back, and keeps each episode for review and comparison.</p>
+  <figure class="fig">
+    <a href="assets/img/monitor_live.webp"><img src="assets/img/monitor_live.webp" alt="Web monitor during a USB insertion: live wrist force, the model's call and the returned tool result." loading="lazy"></a>
+    <figcaption>Monitor during a USB insertion, turn 9, a wiggle in progress. English replay of a recorded episode.</figcaption>
+  </figure>
 </section>
 
 <section id="start" class="start wrap">
@@ -245,7 +239,13 @@ python scripts/run_episode.py --task weight_sort \
     <div class="start-item">
       <h3>Use the demonstrations</h3>
       <p>1,423 expert episodes on the seven HiddenPhys tasks, with two cameras, proprioception, raw wrist force and the exact
-        controller actions: raw episodes that replay exactly, and a LeRobot dataset for training.</p>
+        controller actions: raw episodes that replay exactly, and a LeRobot dataset for training, on
+        <a href="https://huggingface.co/datasets/Jack97/ForceHarness-Data">Hugging Face</a>.</p>
+<pre class="cmd"><code>hf download Jack97/ForceHarness-Data --repo-type dataset \
+  --local-dir hiddenphys_demos
+# Or a single task in raw replayable form:
+hf download Jack97/ForceHarness-Data --repo-type dataset \
+  --include "raw/weight_sort/*" --local-dir hiddenphys_demos</code></pre>
     </div>
   </div>
 </section>
@@ -271,6 +271,6 @@ python scripts/run_episode.py --task weight_sort \
   <p>ForceHarness &middot; Show Lab, National University of Singapore. Code released under the MIT license.</p>
 </footer>
 
-<script src="assets/js/site.js?v=20261116b" defer></script>
+<script src="assets/js/site.js?v=20261118a" defer></script>
 </body>
 </html>
