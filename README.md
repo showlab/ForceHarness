@@ -3,7 +3,7 @@
 <img src="assets/banner.png" alt="ForceHarness: Turning Force into Action and Physics for Frozen Frontier Models" width="720">
 
 <p align="center">
-Ke Sun ·
+<a href="https://skjack.github.io/">Ke Sun</a> ·
 <a href="https://kevinskwk.github.io/">Kevin Yuchen Ma</a> ·
 Yike Zhang ·
 <a href="https://chenanno.github.io/">Yanzhe Chen</a> ·
