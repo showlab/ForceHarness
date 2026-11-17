@@ -160,6 +160,11 @@ def build_lerobot(out: Path) -> None:
             shutil.move(str(root / sub), str(out / sub))
     for extra in root.glob("*.json"):                 # meta_fh.json: dimensions and action ranges the pi0.5 server reads
         shutil.move(str(extra), str(out / extra.name))
+    meta_fh = out / "meta_fh.json"
+    if meta_fh.exists():                              # its demos_root is a local path of the build machine: keep it relative
+        meta = json.loads(meta_fh.read_text(encoding="utf-8"))
+        meta["demos_root"] = "raw"
+        meta_fh.write_text(json.dumps(meta, ensure_ascii=False, indent=1), encoding="utf-8")
     shutil.rmtree(tmp)
     shutil.rmtree(raw_as_demos)
     print(f"[lerobot] written to {out}/meta and {out}/data", flush=True)

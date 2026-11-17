@@ -21,6 +21,8 @@ Yike Zhang ·
 
 <p align="center">
 📄 <a href="https://arxiv.org/abs/2611.21099">arXiv Paper</a> &nbsp;|&nbsp;
+🤗 <a href="https://huggingface.co/papers/2611.21099">Daily Paper</a> &nbsp;|&nbsp;
+📊 <a href="https://huggingface.co/datasets/Jack97/ForceHarness-Data">Dataset</a> &nbsp;|&nbsp;
 🌐 <a href="https://showlab.github.io/ForceHarness/">Project Page</a> &nbsp;|&nbsp;
 🎬 <a href="https://showlab.github.io/ForceHarness/#film">Video</a> &nbsp;|&nbsp;
 🤖 <a href="skills/forceharness-setup/SKILL.md">Agent Skill</a>
@@ -215,11 +217,17 @@ tests/                         offline tests (no simulator, robot or API key nee
 
 ## Data
 
-The HiddenPhys expert demonstrations used to train the learned baselines (7 tasks, about 200 successful episodes each, two
-128×128 cameras, proprioception, raw wrist force, the exact controller actions and stiffness) are released on Hugging Face in two
-forms: raw episodes that replay exactly in the simulator, and a LeRobot v2.1 dataset for training. The link will be added here
-once the dataset is public. [scripts/data/export_hf.py](scripts/data/export_hf.py) builds both from recorded episodes; the
-dataset card is [docs/dataset_card.md](docs/dataset_card.md).
+The HiddenPhys expert demonstrations used to train the learned baselines (7 tasks, 1,423 successful episodes, 726,867 control
+steps, two 128×128 cameras, proprioception, raw wrist force, the exact controller actions and stiffness) are on Hugging Face:
+**[Jack97/ForceHarness-Data](https://huggingface.co/datasets/Jack97/ForceHarness-Data)**. It holds two forms: raw episodes under
+`raw/` that replay exactly in the simulator, and a LeRobot v2.1 dataset at the root for training.
+
+```bash
+hf download Jack97/ForceHarness-Data --repo-type dataset --include "raw/weight_sort/*" --local-dir hiddenphys_demos  # one task, raw form
+```
+
+[scripts/data/export_hf.py](scripts/data/export_hf.py) builds both forms from recorded episodes; the dataset card is
+[docs/dataset_card.md](docs/dataset_card.md).
 
 ## Safety
 
