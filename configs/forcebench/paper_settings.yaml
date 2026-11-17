@@ -6,7 +6,8 @@
 # The paper's own job lists are not part of this repository; the rows below reproduce their settings with the released code.
 # Model rows make paid API calls (per-episode costs: docs/forcebench.md).
 
-seeds: {start: 300, count: 10}        # ForceBench evaluation seeds 300-309, one episode each
+seeds: {start: 300, count: 10}        # the paper's seeds 300-309, one episode each; also used during development, so the
+                                      # *_heldout rows below test on seeds 320-329 instead
 
 evaluator:                            # our copy of ForceBench's evaluator, scripts/forcebench/eval_forcebench.py (via run.sh)
   env_spacing: 30                     # m between parallel environments; at ForceBench's default of 6 m later kitchen scenes darken
@@ -38,6 +39,10 @@ rows:
   # seeds; and the no-force Fable row, which the paper does not report.
   scripted: {model: scripted, condition: force, seeds: {start: 300, count: 8}}
   scripted_heldout: {model: scripted, condition: force, seeds: {start: 308, count: 8}}
+  # Test on seeds no run had used before (docs/forcebench.md, "Development and test seeds"), with this code unchanged:
+  # GPT-6 Astra 66/80 with ForceHarness, 50/80 without force.
+  astra_force_heldout: {model: gpt-6-astra, condition: force, seeds: {start: 320, count: 10}}
+  astra_no_force_heldout: {model: gpt-6-astra, condition: no_force, seeds: {start: 320, count: 10}}
   fable_no_force: {model: claude-fable-5-2, condition: no_force}
 
 # Per-task policy-server arguments, applied in every row (`args`: extra arguments; `prim_overrides`: --prim-overrides JSON).

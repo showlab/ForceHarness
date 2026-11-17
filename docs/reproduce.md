@@ -31,7 +31,9 @@ row); `scripts/hiddenphys/expert_table.py`, `learned_table.py` and `force_form_t
 
 Install and settings: [forcebench.md](forcebench.md). The paper's cells use RGB-only perception without privileged object
 geometry, seeds 300-309 (10 per task), GPT-6 Astra and GPT-6.1 Sol (and Claude Fable 5.2), with and without force.
-Run with `scripts/forcebench/batch.py` and summarise with `scripts/forcebench/collect.py`.
+Run with `scripts/forcebench/batch.py` and summarise with `scripts/forcebench/collect.py`. Seeds 300-309 were also used
+during development; the held-out test on seeds 320-329 (GPT-6 Astra, with and without force) is
+`--row astra_force_heldout` and `--row astra_no_force_heldout`, see [forcebench.md](forcebench.md#development-and-test-seeds).
 
 ## Real robot
 

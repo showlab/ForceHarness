@@ -17,8 +17,14 @@ All numbers come from ForceBench at commit 31acf73, for example:
 - rattle_sort: `forcebench/tasks/rattle_sort/spec.py` (parcel 54 x 120 x 23.3 mm, 0.18 kg, centre of mass centred or shifted
   20 mm along the long axis, about 0.035 N*m; black basket at (0.64, -0.22), opening 0.235 x 0.145, floor at z 0.0327, walls
   105 mm; usable conveyor area centred at (0.6909, 0.22), 0.24 x 0.22, surface at z 0.018).
-Never given to the model: the hidden values (mass, centre of mass, detent angle, easier direction, resistance profile) and the
-seed (ForceBench assigns classes by seed parity; the seed is part of rollout_id, which the harness does not pass on).
+Never given to the model: the hidden values of an episode (mass, centre of mass, detent angle, easier direction, bolt
+position, and where the drawer's resistance starts, how long it rises and what force breaks the latch) and the seed
+(ForceBench assigns classes by seed parity; the seed is part of rollout_id, which the harness does not pass on). Constants
+that are the same in every episode, such as the drawer's 0.35 N free resistance and its 2.35 N stop force, are task facts
+and appear in the instruction.
+
+Seeds 300-309 were used while developing these descriptions and the ForceBench tools; docs/forcebench.md ("Development and
+test seeds") lists what was changed on them and reports a test on seeds 320-329.
 """
 from __future__ import annotations
 

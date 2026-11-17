@@ -4,7 +4,7 @@
 
 <p align="center">
   <a href="https://showlab.github.io/ForceHarness"><img alt="Project page" src="https://img.shields.io/badge/Project-Page-1f7f74?style=for-the-badge"></a>
-  <img alt="arXiv: coming soon" src="https://img.shields.io/badge/arXiv-coming%20soon-b31b1b?style=for-the-badge">
+  <a href="https://arxiv.org/abs/2611.21099"><img alt="arXiv 2611.21099" src="https://img.shields.io/badge/arXiv-2611.21099-b31b1b?style=for-the-badge"></a>
   <a href="skills/forceharness-setup/SKILL.md"><img alt="Agent skill" src="https://img.shields.io/badge/Agent-Skill-24406e?style=for-the-badge"></a>
   <a href="LICENSE"><img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-6b7280?style=for-the-badge"></a>
 </p>
@@ -23,7 +23,8 @@
 <p align="center"><sub>
   A frozen frontier model only issues tool calls. ForceHarness calibrates hand force, runs self-terminating force primitives
   beneath the model, and returns physical quantities. Middle: four real-robot calls with their force traces and results.
-  Right: GPT-6 Astra with and without force on the real robot, ForceBench and HiddenPhys.
+  Right: GPT-6 Astra with and without force on the real robot, ForceBench and HiddenPhys, as in the paper; the ForceBench
+  panel shows the development seeds 300–309, and on held-out seeds 320–329 the same code gives 62.5% → 82.5% (see Results).
 </sub></p>
 
 > [!TIP]
@@ -59,7 +60,7 @@ All models are used zero-shot: no demonstrations, no finetuning.
   </tr>
   <tr>
     <td align="center"><h3>3.3% → 90.0%</h3><sub>6 tasks × 10 trials</sub></td>
-    <td align="center"><h3>70.0% → 87.5%</h3><sub>8 tasks × 10 seeds, RGB only</sub></td>
+    <td align="center"><h3>62.5% → 82.5%</h3><sub>8 tasks × 10 held-out seeds, RGB only</sub></td>
     <td align="center"><h3>62.1% → 96.4%</h3><sub>7 tasks × 20 seeds</sub></td>
   </tr>
 </table>
@@ -70,11 +71,20 @@ Success rate of GPT-6 Astra without force (the no-force control) → with ForceH
 |:--|:--|:-:|:-:|:--|
 | Real FR3 | GPT-6&nbsp;Astra | **54/60** | 2/60 | |
 | | GPT-6.1&nbsp;Sol | **47/60** | | |
-| ForceBench | GPT-6&nbsp;Astra | **87.5%** | 70.0% | best trained force-aware π0.5: 35.3% |
+| ForceBench, held-out seeds 320–329 | GPT-6&nbsp;Astra | **82.5%** | 62.5% | best trained force-aware π0.5: 35.3% |
+| ForceBench, development seeds 300–309 (paper) | GPT-6&nbsp;Astra | **87.5%** | 70.0% | |
 | | GPT-6.1&nbsp;Sol | **87.5%** | 65.0% | |
 | HiddenPhys | GPT-6&nbsp;Astra | **135/140**, 0 damaged | 87/140 | expert force controller: 136/140<br>trained policies: 65–83/140 |
 
 Trained policies on HiddenPhys are Diffusion Policy, π0.5 and ForceVLA, each trained on 200 demonstrations per task.
+
+**ForceBench seeds.** The ForceBench numbers in the paper (seeds 300–309) are not held out: the ForceBench tools, task
+details and perception thresholds were developed on seeds 300–307, and Stove Press and Nut Thread were revised after first
+model runs on seeds 300–309. We therefore treat 300–309 as development seeds and report a separate test on seeds 320–329,
+which no run had used before, with the released code unchanged: GPT-6 Astra reaches 82.5% (66/80) with ForceHarness and 62.5%
+(50/80) without force. Per seed, 22 seeds succeed only with force and 6 only without (McNemar p = 0.004), and the two revised
+tasks hold up (Stove Press 10/10, Nut Thread 8/10). HiddenPhys always kept separate development seeds (9000–9019) and test
+seeds (9100–9119). Per-task numbers and the list of task-specific settings: [docs/forcebench.md](docs/forcebench.md#development-and-test-seeds).
 
 ## How it works
 
@@ -217,7 +227,7 @@ dataset card is [docs/dataset_card.md](docs/dataset_card.md).
 @article{sun2026forceharness,
   title   = {ForceHarness: Turning Force into Action and Physics for Frozen Frontier Models},
   author  = {Sun, Ke and Ma, Kevin Yuchen and Zhang, Yike and Chen, Yanzhe and Shou, Mike Zheng},
-  journal = {arXiv preprint},
+  journal = {arXiv preprint arXiv:2611.21099},
   year    = {2026}
 }
 ```

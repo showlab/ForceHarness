@@ -218,7 +218,7 @@ The paper's own job lists are not part of this repository.
 | Setting | Value |
 |---|---|
 | ForceBench | commit `31acf73`, Isaac Sim 6.0.1, Isaac Lab 3.0.0b2.post1; ForceBench's success criteria as implemented by its public evaluator |
-| Seeds | evaluation seeds 300-309, one episode per seed and task (10 per cell) |
+| Seeds | seeds 300-309, one episode per seed and task (10 per cell); these seeds were also used during development, see [Development and test seeds](#development-and-test-seeds) for the held-out test on 320-329 |
 | Perception | RGB only: main and wrist views at 224 x 224, shown enlarged twice with a pixel grid; camera calibration used inside `locate` / `locate_object`; no object coordinates, no depth |
 | Evaluator | our copy with `--no-privileged_geometry`, `--execute_chunk 1` (one action per tick), 1,500 steps (100 s), 30 m between environments |
 | Episode limits | 30 turns, 60 tool calls, 100 s of simulated time, 25 N force cap |
@@ -245,6 +245,53 @@ Reference results (successes out of 10, Table 4 of the paper):
 
 With 10 episodes per cell, a difference of one or two episodes on a task is within noise. The scripted reference agent
 (`--row scripted`, seeds 300-307; `--row scripted_heldout`, seeds 308-315) reached 50/64 and 48/64.
+
+## Development and test seeds
+
+The paper's ForceBench rows are not a held-out test. The ForceBench tools, task details and perception thresholds were
+developed on seeds 300-307, and after first model runs on seeds 300-309 two tasks were revised: Nut Thread gained
+`locate_object` and a corrected instruction (the first wording gave a wrong grasp height), and Stove Press got a resisting
+torque in its tool result (it had been missing) and then the per-side report, whose 8-25 degree window was chosen by
+replaying 56 recorded episodes from those seeds. We therefore treat seeds 300-309 as development seeds.
+
+As a test, we ran GPT-6 Astra on seeds 320-329, which no run had used before, with the code of this repository unchanged and
+the settings above (`--row astra_force_heldout`, `--row astra_no_force_heldout`):
+
+| Row | Weight | CoM | Faucet | Faucet dir. | Stove | Stove press | Drawer | Nut | Total |
+|---|---|---|---|---|---|---|---|---|---|
+| GPT-6 Astra, no force | 6 | 5 | 10 | 4 | 10 | 6 | 0 | 9 | 50/80 (62.5%) |
+| GPT-6 Astra + ForceHarness | 10 | 6 | 10 | 2 | 10 | 10 | 10 | 8 | 66/80 (82.5%) |
+| only ForceHarness / only no force succeeds | 4 / 0 | 1 / 0 | 0 / 0 | 2 / 4 | 0 / 0 | 4 / 0 | 10 / 0 | 1 / 2 | 22 / 6 |
+
+- Wilson 95% intervals: 73-89% with ForceHarness, 52-72% without force. Paired on seeds, McNemar's exact p = 0.004
+  (development seeds: 20 / 6, p = 0.009). Without Drawer Pull the pairs are 12 / 6 (p = 0.24): as on the development seeds,
+  the gain comes mainly from Drawer Pull, and the other tasks do not separate at 10 episodes.
+- Both conditions score 5-7.5 points lower than on the development seeds, and the gap is 20.0 points (17.5 on the
+  development seeds). The two revised tasks hold up: Stove Press 10/10 with force against 6/10 without, Nut Thread 8/10
+  against 9/10.
+- Faucet Direction with force reached 2/10 (5/10 on the development seeds): six of the eight failures turned the lever the
+  wrong way, one stopped 0.9 degrees short of the detent in the right direction, and one gave up. With the paper's overrides,
+  the result of `turn` carries no resisting-moment numbers on this task, so the choice is close to a guess, as in the
+  no-force control (4/10).
+- Stove Press here uses the per-side report of this code, as in the paper's Sol row; Astra's paper row used the earlier mean
+  report.
+- The 160 episodes cost US$144.92 at list prices (US$0.91 per episode on average).
+
+### Task-specific settings
+
+Everything below is part of what the model sees or how a tool behaves on one task. The base primitives, the physics
+translation layer, the agent loop and the system prompt are the same for all tasks.
+
+| Setting | Tasks | Origin |
+|---|---|---|
+| Task details: dimensions, key heights, mechanism and axis, ranges and success rules from ForceBench's public task specifications | all | ForceBench commit `31acf73` |
+| Procedural hints in the task details (grasp height, which tool and axis to use, wrist turn limit, slow last move) | Faucet Turn, Faucet Direction, Stove Turn, Stove Press, Drawer Pull, Nut Thread | written while developing on seeds 300-307; Nut Thread rewritten after runs on 300-309 |
+| `turn` with a lead cap on the attitude target | Faucet Turn, Faucet Direction | developed with the scripted agent on seeds 300-307 |
+| `press_turn` (force) and `move_turn` (no-force control; Nut Thread under both) | Stove Press, Nut Thread | developed with the scripted agent on seeds 300-307 |
+| `point_tool`, `pull`, and the `push` variant with a stop on a resistance drop | Drawer Pull | from the HiddenPhys door tasks and an earlier MuJoCo snap-fit task |
+| `locate_object` with the shapes of nut and bolt | Nut Thread | added after runs on seeds 300-309 |
+| Per-side resistance report (8-25 degrees out) and the note on reading it (force interface only) | Stove Press | added after runs on seeds 300-309 |
+| `turn_quantities: false` | Faucet Turn, Faucet Direction | reproduces the paper's runs, in which `turn` reported no resisting-moment numbers |
 
 ## What the model gets
 
@@ -277,9 +324,10 @@ load (a 0.18 kg box otherwise leaves the hand about 14 mm below its target).
   3 degree window and a visible flame (no release or clearance check); Drawer Pull checks the opening within 2.5 mm of the
   target at <= 10 mm/s for 15 frames with an intact latch (no release check). These three columns may favour our results.
   Nut Thread success is centred seating within the height window, which the criterion accepts, not full threading.
-- **Tuning on evaluation seeds.** Tools and perception thresholds were developed on eight of the ten evaluation seeds
-  (300-307), and Stove Press and Nut Thread were revised after initial model runs on seeds 300-309, so no row is fully held
-  out.
+- **Development seeds.** Tools and perception thresholds were developed on eight of the ten paper seeds (300-307), and
+  Stove Press and Nut Thread were revised after initial model runs on seeds 300-309, so the paper's rows are not held out.
+  The test on unseen seeds 320-329 is in [Development and test seeds](#development-and-test-seeds); only GPT-6 Astra was
+  run there.
 - **Environment spacing.** At ForceBench's default of 6 m between parallel environments, later environments in the kitchen
   scenes render darker and thin objects blur (the scripted agent dropped to 3/8 on Faucet Turn and 4/8 on Stove Turn); at
   30 m every environment looks like a single one. `run.sh` uses 30 m; spacing affects only images, not physics.

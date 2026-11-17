@@ -112,8 +112,9 @@ ROTATE_NOTES = {
 }
 
 
-# task switch "push_click" (door_latch task): the push description and parameters gain the constant-speed advance,
-# max_dist and the stop on a "click"; for every other task the push description stays word for word the same
+# task switch "push_click" (used by ForceBench's Drawer Pull; first written for an earlier MuJoCo snap-fit task): the push
+# description and parameters gain the constant-speed advance, max_dist and the stop on a "click"; for every other task the
+# push description stays word for word the same
 PUSH_CLICK_DESC = (" While the resistance is below target_force it advances at about 2 cm/s (at most max_dist metres, default 0.05). With "
                    "stop_on_resistance_drop=true it stops as soon as the resistance peaks and then clearly drops (a 'click', e.g. a latch giving way).")
 
