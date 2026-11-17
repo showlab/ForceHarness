@@ -1,6 +1,8 @@
 <div align="center">
 
-<img src="assets/banner.png" alt="ForceHarness: Turning Force into Action and Physics for Frozen Frontier Models" width="720">
+<img src="assets/logo.svg" alt="ForceHarness" width="460">
+
+### Turning Force into Action and Physics for Frozen Frontier Models
 
 <p align="center">
 <a href="https://skjack.github.io/">Ke Sun</a> ·
