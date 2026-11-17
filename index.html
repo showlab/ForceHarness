@@ -19,7 +19,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/site.css?v=20261118a">
+<link rel="stylesheet" href="assets/css/site.css?v=20261118b">
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
@@ -67,13 +67,6 @@
   <p class="section-intro">A Franka FR3 with joint torque sensors but no wrist force sensor, run zero-shot by GPT-6 Astra.
     Each clip is one whole autonomous episode, sped up as marked; switch a tile to see the no-force control, which keeps
     the same harness and safety limits but removes force tools, force values and force guidance.</p>
-  <figure class="teaser">
-    <video id="teaser" autoplay muted loop playsinline preload="metadata" poster="assets/video/teaser.jpg">
-      <source src="assets/video/teaser.mp4" type="video/mp4">
-    </video>
-    <figcaption>All six tasks with ForceHarness, each tile marked with its playback speed. Below, every episode in full
-      next to its no-force control.</figcaption>
-  </figure>
   <div class="clip-grid" data-clips></div>
   <p class="table-lead">Successes out of 10 episodes per condition; for GPT-6 Astra every task differs at p &lt; 0.01
     (Fisher's exact test).</p>
@@ -271,6 +264,6 @@ hf download Jack97/ForceHarness-Data --repo-type dataset \
   <p>ForceHarness &middot; Show Lab, National University of Singapore. Code released under the MIT license.</p>
 </footer>
 
-<script src="assets/js/site.js?v=20261118a" defer></script>
+<script src="assets/js/site.js?v=20261118b" defer></script>
 </body>
 </html>

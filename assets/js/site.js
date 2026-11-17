@@ -43,13 +43,25 @@
     ["can_weight_sort", "Sort three bottles by weight", 0, 10, 8],
     ["touch_firmness", "Tell soft from hard", 0, 10, 10],
   ];
+  const FOCUS = {
+    "blackboard_wipe_forceharness.mp4": "50% 76%",
+    "blackboard_wipe_noforce.mp4": "50% 67%",
+    "screw_insert_forceharness.mp4": "50% 57%",
+    "screw_insert_noforce.mp4": "50% 57%",
+    "peel_vegetable_forceharness.mp4": "50% 62%",
+    "peel_vegetable_noforce.mp4": "50% 68%",
+    "usb_insert_forceharness.mp4": "50% 55%",
+    "usb_insert_noforce.mp4": "50% 59%",
+    "can_weight_sort_forceharness.mp4": "50% 62%",
+    "touch_firmness_noforce.mp4": "50% 56%",
+  };
   const isBaseline = (cond) => /no[-\s]?force|baseline|^b$/i.test(String(cond || ""));
   const reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const onScreen = "IntersectionObserver" in window ? new IntersectionObserver((entries) => entries.forEach((e) => {
     const v = e.target;
     if (e.isIntersecting && !reduceMotion) v.play().catch(() => {});
     else v.pause();
-  }), { threshold: 0.35 }) : null;
+  }), { threshold: 0.25 }) : null;
 
   /* One tile per task: the ForceHarness episode by default, a switch to the no-force control when it was recorded. */
   function clipTile(title, ours, base, nf, fh) {
@@ -63,7 +75,8 @@
       video.pause();
       video.poster = `assets/video/${entry.poster}`;
       video.src = `assets/video/${entry.file}`;
-      media.classList.toggle("is-landscape", (entry.width || 0) > (entry.height || 0));
+      video.style.objectPosition = FOCUS[entry.file] || "50% 50%";
+      media.classList.toggle("is-d435", /d435/i.test(entry.file || ""));
       speed.textContent = `Autonomous, ${entry.speed}x`;
       const ok = /success/i.test(entry.outcome || "");
       outcome.textContent = ok ? "Success" : "Failure";
@@ -84,7 +97,8 @@
     const first = ours || base;
     if (first) { show(first); buttons[ours ? 0 : 1].setAttribute("aria-pressed", "true"); }
     if (onScreen) onScreen.observe(video);
-    return el("figure", { class: "tile" }, media, el("figcaption", {}, el("strong", { text: title }), speed, sw));
+    const head = el("div", { class: "tile-head" }, el("strong", { text: title }), speed);
+    return el("figure", { class: "tile" }, media, el("figcaption", {}, head, sw));
   }
 
   const tbody = $(".real-table tbody");
