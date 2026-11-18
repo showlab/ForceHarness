@@ -80,9 +80,10 @@ section { margin-top: clamp(64px, 9vw, 112px); }
 .affil { color: var(--muted); margin: 4px 0 0; font-size: .95rem; }
 .links { list-style: none; padding: 0; margin: 26px 0 0; display: flex; flex-wrap: wrap; gap: 10px; }
 .btn {
-  display: inline-flex; align-items: baseline; gap: 8px; padding: 9px 16px; border-radius: 999px;
+  display: inline-flex; align-items: center; gap: 7px; padding: 9px 16px; border-radius: 999px;
   border: 1px solid var(--rule); color: var(--ink); text-decoration: none; font-weight: 500; background: var(--paper);
 }
+.btn svg, .btn img { flex: none; }
 a.btn:hover { border-color: var(--command); color: var(--command); }
 .btn small { color: var(--muted); font-size: .78rem; font-weight: 400; }
 .btn.is-soon { color: var(--muted); cursor: default; }
